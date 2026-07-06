@@ -18,6 +18,13 @@ file either.
 
 - **One logical change per commit.** Small, reviewable diffs. Don't
   restructure multiple sections of a file in a single commit.
+- **Don't commit wallpaper/background changes.** As of the Gargantua
+  wallpaper (the last one committed), background swaps are local-only:
+  change the live wallpaper and the `swaybg` path in `hyprland.lua` as
+  needed, but don't create commits for them. The committed wallpaper line
+  and `hypr/wallpapers/` reflect the last agreed background — leave them as
+  they are. If you edit `hyprland.lua` for another reason, don't sweep an
+  uncommitted wallpaper-line change into that commit.
 - **Never assume aesthetic decisions.** Colors, layout specifics, sizing —
   ask before choosing, unless this file already states a decision.
 - **Symlink discipline:** all live config is symlinked from `~/dotfiles/*`
