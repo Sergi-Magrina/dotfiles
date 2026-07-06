@@ -58,7 +58,8 @@ local menu = "rofi -show drun"
 -- end)
 
 hl.on("hyprland.start", function()
-    hl.exec_cmd(terminal)
+    -- No autostart terminal: ws 1 is a plain empty desktop (wallpaper +
+    -- waybar only) on login. Open a terminal on demand with Super+Q.
     hl.exec_cmd("waybar")
     -- swaybg, not hyprpaper: hyprpaper needs a real GL/EGL context this
     -- VM's software-rendered GPU can't provide (same reason kitty crashes).
