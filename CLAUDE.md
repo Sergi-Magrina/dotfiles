@@ -7,7 +7,7 @@ A Hyprland dotfiles repo, currently built and tested inside a VirtualBox VM
 the whole setup.
 
 ## Who you're working with
-Sergi — comfortable with concepts, still learning Bash/Arch day to day.
+Sergi — comfortable but stil new with concepts, learning Bash/Arch day to day.
 Explain non-obvious commands briefly when you introduce them. Don't assume
 deep CLI fluency, but don't over-explain things already established in this
 file either.
@@ -41,10 +41,17 @@ file either.
   - When installing packages, check Wayland compatibility specifically —
     e.g. `rofi-wayland`, not plain `rofi` (X11-only, causes scaling issues
     under Hyprland).
+  - `hyprpaper` does not render in this VM — it needs a real GL/EGL context
+    the software-rendered GPU can't provide (same root cause as kitty). The
+    wallpaper daemon here is `swaybg` (static-image, works under software
+    rendering). See roadmap step 2 for the hardware-side reconsideration.
   - Visual polish (animations, gradients, general "does it look good") is
     not meaningful to judge in this VM — software rendering. Judge
     *structure and correctness* here; final aesthetic judgment happens on
     real hardware later.
+  - The running list of VM-vs-real-hardware program swaps, with versions
+    (e.g. kitty→foot, hyprpaper→swaybg), lives in `vm-substitutions.md`. Add
+    or reverse a swap there — don't duplicate the version table into this file.
 
 ---
 
@@ -61,9 +68,15 @@ hardcoding its own hex codes.
 ## Roadmap
 
 1. **Red/black/gold theme** — apply palette to Hyprland borders + waybar
-2. **Wallpaper** — wire up `hyprpaper` into autostart (currently missing
-   entirely). Interim solid dark wallpaper first; custom-generated
+2. **Wallpaper** — wire up `swaybg` into autostart (see VM constraints for
+   why not `hyprpaper`). Interim solid dark wallpaper first; custom-generated
    red/black/gold wallpaper later.
+   - **Revisit on real hardware:** hyprpaper (Hyprland's native daemon) can
+     render there. But for a *single static* wallpaper it's functionally
+     equal to swaybg — it only wins if runtime wallpaper switching (its IPC),
+     preloading, or per-monitor wallpapers are wanted. Switch back only if
+     one of those becomes a real need; otherwise swaybg stays. Cost to
+     switch is ~one autostart line + a small `.conf`.
 3. **Launcher swap** — install `rofi-wayland`, theme it to match the
    palette, rebind `Super+R` from `wofi` to `rofi`. Leave `wofi` installed
    but unused, no need to remove it.
