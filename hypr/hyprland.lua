@@ -386,7 +386,7 @@ hl.window_rule({
 -- app first runs: a native-Wayland app_id and an XWayland class can differ.
 --   ws 1 stays empty (no rule — plain desktop on login)
 --   ws 2 = file manager (yazi)
---   ws 3 = browser (placeholder — no browser chosen yet)
+--   ws 3 = browser (Firefox)
 --   ws 4 = general apps (Claude Desktop, VS Code, Spotify)
 --   ws 0 (internal 10) = Control Center — reserved, built in phase 6
 
@@ -414,5 +414,8 @@ hl.window_rule({
     workspace = "4",
 })
 
--- ws 3 = browser: placeholder only, no browser chosen yet (its own session).
--- hl.window_rule({ name = "ws-browser", match = { class = "TODO-browser" }, workspace = "3" })
+hl.window_rule({
+    name  = "ws-browser",
+    match = { class = "^firefox$" },   -- native Wayland app_id, verified via hyprctl (xwayland: 0)
+    workspace = "3",
+})
