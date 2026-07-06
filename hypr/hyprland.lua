@@ -58,6 +58,11 @@ local menu = "wofi --show drun"
 hl.on("hyprland.start", function()
     hl.exec_cmd(terminal)
     hl.exec_cmd("waybar")
+    -- swaybg, not hyprpaper: hyprpaper needs a real GL/EGL context this
+    -- VM's software-rendered GPU can't provide (same reason kitty crashes).
+    -- swaybg renders fine under software rendering. Swap the image path
+    -- when the custom red/black/gold wallpaper replaces the interim solid.
+    hl.exec_cmd("swaybg -i ~/.config/hypr/wallpapers/goku-red.jpg -m fill")
     hl.exec_cmd("VBoxClient --clipboard")
 end)
 
