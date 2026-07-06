@@ -1,14 +1,13 @@
-/* Color values mirror hypr/colors.lua (red / black / gold theme).
+/* Color values mirror hypr/colors.lua (red / black theme).
  * Keep the two files in sync manually — CSS can't import the Lua module.
  *
  * Rules for this theme:
  *   - background: black, everywhere.
  *   - red: all outlines/separator lines (glowing) AND all text (plain, no glow).
- *   - gold: accents only — never used for font color. */
+ *   - red-bright: hover / active-state emphasis. */
 @define-color background 	#0d0d0d;
 @define-color red        	#c8102e;
 @define-color red-bright 	#e8384f;
-@define-color gold       	#d4af37;
 @define-color gray       	#5a5a5a;
 
 * {
@@ -60,11 +59,11 @@ window#waybar {
     box-shadow: none;
 }
 
-/* Touch of gold: focused workspace gets a gold underline glow, text stays red */
+/* Focused workspace gets a red underline glow, text stays red */
 #workspaces button.active {
     color: @red;
-    border-bottom: 2px solid @gold;
-    box-shadow: 0 2px 5px @gold;
+    border-bottom: 2px solid @red;
+    box-shadow: 0 2px 5px @red;
 }
 
 #workspaces button.urgent {
@@ -83,12 +82,12 @@ window#waybar {
     font-style: italic;
 }
 
-/* Touch of gold: a gold underline frames the clock, text stays plain red */
+/* A red underline frames the clock, text stays plain red */
 #clock {
     color: @red;
     font-weight: bold;
-    border-bottom: 2px solid @gold;
-    box-shadow: 0 2px 5px @gold;
+    border-bottom: 2px solid @red;
+    box-shadow: 0 2px 5px @red;
 }
 
 #cpu,
@@ -130,8 +129,8 @@ window#waybar {
     -gtk-icon-effect: dim;
 }
 
-/* Touch of gold: needs-attention tray icons get a gold backdrop, not gold text */
+/* Needs-attention tray icons get a red backdrop */
 #tray > .needs-attention {
     -gtk-icon-effect: highlight;
-    background-color: @gold;
+    background-color: @red;
 }

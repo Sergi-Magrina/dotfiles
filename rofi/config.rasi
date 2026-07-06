@@ -1,5 +1,5 @@
 /*
- * rofi launcher — red / black / gold theme
+ * rofi launcher — red / black theme
  *
  * COLOR SOURCE OF TRUTH: hypr/colors.lua
  * rofi themes are .rasi and cannot require() Lua, so the hex values below
@@ -9,7 +9,6 @@
  *   background  #0d0d0d   near-black
  *   red         #c8102e   primary red — text / interactive
  *   red-bright  #e8384f   brighter red — hover / active / selection
- *   gold        #d4af37   gold accent, used sparingly (border + prompt)
  *   gray        #5a5a5a   muted gray — inactive / disabled
  */
 
@@ -18,7 +17,7 @@ configuration {
     show-icons:          true;
     icon-theme:          "Adwaita";
     drun-display-format: "{name}";
-    /* Gold search glyph as the prompt (Nerd Font). */
+    /* Red search glyph as the prompt (Nerd Font). */
     display-drun:        " ";
 }
 
@@ -28,7 +27,6 @@ configuration {
     bg-alpha:    #0d0d0dcc;    /* ~80% opaque window background (cc = 204/255) */
     red:         #c8102e;      /* primary red — text / interactive */
     red-bright:  #e8384f;      /* brighter red — hover / active / selection */
-    gold:        #d4af37;      /* gold accent — border + prompt */
     gray:        #5a5a5a;      /* muted gray — inactive / disabled */
     transparent: rgba(0, 0, 0, 0%);
 
@@ -41,10 +39,10 @@ window {
     transparency:     "real";
     location:         center;
     anchor:           center;
-    width:            40%;
+    width:            50%;
     background-color: @bg-alpha;
     border:           2px;
-    border-color:     @gold;      /* gold border */
+    border-color:     @red;       /* red border */
     border-radius:    10px;       /* matches Hyprland rounding */
     padding:          12px;
 }
@@ -62,12 +60,12 @@ inputbar {
     spacing:          10px;
     padding:          8px;
     border:           0px 0px 2px 0px;   /* bottom rule under the search line */
-    border-color:     @gold;
+    border-color:     @red;
 }
 
 prompt {
     background-color: transparent;
-    text-color:       @gold;      /* gold prompt glyph */
+    text-color:       @red;       /* red prompt glyph */
     vertical-align:   0.5;
 }
 
@@ -82,7 +80,7 @@ entry {
 
 listview {
     background-color: transparent;
-    lines:            8;
+    lines:            4;
     columns:          1;
     spacing:          4px;
     scrollbar:        false;
@@ -92,7 +90,7 @@ listview {
 
 element {
     spacing:          10px;
-    padding:          8px;
+    padding:          6px;
     border-radius:    6px;
 }
 
@@ -121,7 +119,7 @@ element selected.active {
 
 element-icon {
     background-color: transparent;
-    size:             1.2em;
+    size:             1.0em;
     vertical-align:   0.5;
 }
 
