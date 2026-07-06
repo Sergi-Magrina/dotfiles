@@ -37,7 +37,7 @@ local colors = require("colors")
 -- Set programs that you use
 local terminal    = "foot"
 local fileManager = "dolphin"
-local menu = "wofi --show drun"
+local menu = "rofi -show drun"
 
 
 -------------------
