@@ -95,8 +95,7 @@ until that phase lands, treat it as the single fixed theme.
    class:
    - **1** — empty desktop: wallpaper + waybar only, nothing pinned here
    - **2** — file manager
-   - **3** — browser (placeholder rule for now; finalize once a browser is
-     chosen)
+   - **3** — browser (Firefox — chosen; native Wayland, class `firefox`)
    - **4** — general apps: Claude Desktop, VS Code, Spotify
    - **0** — Control Center (see below — special-cased, not a normal app
      workspace)
@@ -152,7 +151,6 @@ until that phase lands, treat it as the single fixed theme.
 
 ## Open decisions (ask, don't assume)
 
-- Which browser (workspace 3 is a placeholder rule until this is decided)
 - Exact Control Center widget positions/sizes — rough zones are described
   above, but pixel-level layout should be confirmed before finalizing
 - Custom wallpaper generation — revisit once basic theming (steps 1–5) is
