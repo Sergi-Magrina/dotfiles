@@ -1,0 +1,137 @@
+/* Color values mirror hypr/colors.lua (red / black / gold theme).
+ * Keep the two files in sync manually — CSS can't import the Lua module.
+ *
+ * Rules for this theme:
+ *   - background: black, everywhere.
+ *   - red: all outlines/separator lines (glowing) AND all text (plain, no glow).
+ *   - gold: accents only — never used for font color. */
+@define-color background 	#0d0d0d;
+@define-color red        	#c8102e;
+@define-color red-bright 	#e8384f;
+@define-color gold       	#d4af37;
+@define-color gray       	#5a5a5a;
+
+* {
+    font-family: "JetBrainsMono Nerd Font", monospace;
+    font-size: 13px;
+    min-height: 0;
+}
+
+window#waybar {
+    background-color: @background;
+    color: @red;
+    border: 2px solid @red;
+    box-shadow: 0 0 6px 1px @red, 0 0 14px alpha(@red-bright, 0.55);
+}
+
+/* Separator line between every top-level module — glowing red */
+#workspaces,
+#window,
+#clock,
+#pulseaudio,
+#network,
+#cpu,
+#memory,
+#battery {
+    padding: 0 10px;
+    border-right: 2px solid @red;
+    box-shadow: 1px 0 4px @red;
+}
+
+#tray {
+    padding: 0 10px;
+}
+
+#workspaces {
+    margin: 4px 0;
+}
+
+/* Each workspace button separated by its own glowing red line */
+#workspaces button {
+    padding: 0 8px;
+    color: @red;
+    background: transparent;
+    border-right: 1px solid @red;
+    box-shadow: 1px 0 3px @red;
+}
+
+#workspaces button:last-child {
+    border-right: none;
+    box-shadow: none;
+}
+
+/* Touch of gold: focused workspace gets a gold underline glow, text stays red */
+#workspaces button.active {
+    color: @red;
+    border-bottom: 2px solid @gold;
+    box-shadow: 0 2px 5px @gold;
+}
+
+#workspaces button.urgent {
+    color: @background;
+    background-color: @red;
+}
+
+#workspaces button:hover {
+    color: @red-bright;
+    border-bottom: 2px solid @red-bright;
+    box-shadow: 0 2px 4px @red-bright;
+}
+
+#window {
+    color: @red;
+    font-style: italic;
+}
+
+/* Touch of gold: a gold underline frames the clock, text stays plain red */
+#clock {
+    color: @red;
+    font-weight: bold;
+    border-bottom: 2px solid @gold;
+    box-shadow: 0 2px 5px @gold;
+}
+
+#cpu,
+#memory,
+#battery,
+#network,
+#pulseaudio {
+    color: @red;
+}
+
+#battery.warning {
+    color: @red-bright;
+}
+
+#battery.critical:not(.charging) {
+    color: @red-bright;
+    animation-name: blink;
+    animation-duration: 1s;
+    animation-timing-function: steps(2);
+    animation-iteration-count: infinite;
+}
+
+@keyframes blink {
+    to {
+        color: @background;
+        background-color: @red-bright;
+    }
+}
+
+#network.disconnected {
+    color: @red-bright;
+}
+
+#pulseaudio.muted {
+    color: @gray;
+}
+
+#tray > .passive {
+    -gtk-icon-effect: dim;
+}
+
+/* Touch of gold: needs-attention tray icons get a gold backdrop, not gold text */
+#tray > .needs-attention {
+    -gtk-icon-effect: highlight;
+    background-color: @gold;
+}
