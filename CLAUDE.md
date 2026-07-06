@@ -65,19 +65,23 @@ file either.
 ## Color palette
 
 Single source of truth: `hypr/colors.lua`. Theme is **black background, red
-for text/interactive elements, gold as a sparing accent** (borders,
-highlights, active states). Every other config — waybar, rofi, mako once
-added — should `require()` or reference these same values rather than
-hardcoding its own hex codes.
+for text/interactive elements**, with a brighter red variant for hover /
+active states. Every other config — waybar, rofi, mako once added — should
+`require()` or reference these same values rather than hardcoding its own hex
+codes.
+
+This black/red theme is the **default** palette. Roadmap step 7
+(selectable palettes) turns it into one of several runtime-swappable themes;
+until that phase lands, treat it as the single fixed theme.
 
 ---
 
 ## Roadmap
 
-1. **Red/black/gold theme** — apply palette to Hyprland borders + waybar
+1. **Red/black theme** — apply palette to Hyprland borders + waybar
 2. **Wallpaper** — wire up `swaybg` into autostart (see VM constraints for
    why not `hyprpaper`). Interim solid dark wallpaper first; custom-generated
-   red/black/gold wallpaper later.
+   red/black wallpaper later.
    - **Revisit on real hardware:** hyprpaper (Hyprland's native daemon) can
      render there. But for a *single static* wallpaper it's functionally
      equal to swaybg — it only wins if runtime wallpaper switching (its IPC),
@@ -108,9 +112,35 @@ hardcoding its own hex codes.
    - Music/Spotify widget — top-left
    - `cava` audio visualizer — bottom strip
    - Quick-task terminal (with custom ASCII art, TBD) — a corner
-7. **Deferred / later work** (do not start until 1–6 are solid):
+   - Notepad — a tabbed notepad of its own (multiple tabs). Jarvis-linked
+     later, so Jarvis can read/write its notes. Tool/app TBD.
+7. **Selectable color palettes** (new phase — do not start until 4–6 are
+   solid, so every colored surface exists before the switcher is built).
+   Goal: several complete themes (not just red/black) the user picks
+   from, applied to the whole desktop + all workspaces **at once**, as a
+   **runtime hot-swap** (a command/keybind reskins the live session — no
+   logout).
+   - **Prerequisite refactor:** today the palette is hand-copied into three
+     files (`hypr/colors.lua`, `waybar/style.css`, `rofi/config.rasi`) plus
+     the swaybg wallpaper. Since CSS and rasi can't `require()` Lua, a
+     runtime switch needs a single palette definition that *generates* the
+     waybar CSS + rofi rasi (small templating step) rather than three copies
+     edited by hand. This consolidation is the foundation and can be pulled
+     forward as prep before the rest of the phase.
+   - **Hot-swap mechanics:** regenerate waybar + rofi from the chosen
+     palette, reload waybar (`killall waybar && waybar &` — it doesn't
+     hot-reload), swap the swaybg wallpaper, and let Hyprland hot-reload its
+     Lua. A palette-picker UI could later live in the Control Center
+     (workspace 0), but the switch *mechanism* is independent of any UI and
+     comes first.
+   - Reframes the fixed-theme stance in the Color palette section above: the
+     black/red theme becomes the *default* palette, one of several.
+8. **Deferred / later work** (do not start until 1–7 are solid):
    - Install + configure `cava`
    - Build a Spotify now-playing + basic controls widget
+   - Theme the Spotify client itself to the palette via **Spicetify** (needs
+     Spotify installed and its ws-4 routing rule verified first; this is the
+     client re-skin, separate from the now-playing widget above)
    - ASCII art for the Control Center's quick-task terminal
    - Jarvis integration (voice assistant, separate long-running project) —
      this comes **last**, once the Control Center shell itself is proven
