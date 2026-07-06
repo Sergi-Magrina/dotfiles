@@ -36,7 +36,9 @@ local colors = require("colors")
 
 -- Set programs that you use
 local terminal    = "foot"
-local fileManager = "dolphin"
+-- yazi is a TUI file manager: it inherits foot's window class, so give it a
+-- dedicated app-id ("yazi") — that's the class the ws-2 routing rule matches.
+local fileManager = "foot --app-id=yazi yazi"
 local menu = "rofi -show drun"
 
 
@@ -373,3 +375,41 @@ hl.window_rule({
     move  = "20 monitor_h-120",
     float = true,
 })
+
+-- Workspace routing (phase 4). Each rule is inert until a window of the
+-- matching class launches, so it's safe to define them before the apps are
+-- installed — the rule just waits. No `silent`, so the view FOLLOWS the app
+-- to its workspace. Verify each class against `hyprctl clients` when the real
+-- app first runs: a native-Wayland app_id and an XWayland class can differ.
+--   ws 1 stays empty (no rule — plain desktop on login)
+--   ws 2 = file manager (yazi)
+--   ws 3 = browser (placeholder — no browser chosen yet)
+--   ws 4 = general apps (Claude Desktop, VS Code, Spotify)
+--   ws 0 (internal 10) = Control Center — reserved, built in phase 6
+
+hl.window_rule({
+    name  = "ws-files",
+    match = { class = "^yazi$" },       -- we set this via `foot --app-id=yazi`
+    workspace = "2",
+})
+
+hl.window_rule({
+    name  = "ws-vscode",
+    match = { class = "^(code|Code)$" },   -- verify on first launch (likely XWayland `Code`)
+    workspace = "4",
+})
+
+hl.window_rule({
+    name  = "ws-spotify",
+    match = { class = "^(spotify|Spotify)$" },   -- verify on first launch (likely XWayland `Spotify`)
+    workspace = "4",
+})
+
+hl.window_rule({
+    name  = "ws-claude",
+    match = { class = "(?i)^claude$" },   -- Electron; class unknown until it runs — verify
+    workspace = "4",
+})
+
+-- ws 3 = browser: placeholder only, no browser chosen yet (its own session).
+-- hl.window_rule({ name = "ws-browser", match = { class = "TODO-browser" }, workspace = "3" })
