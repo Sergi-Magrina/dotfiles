@@ -23,6 +23,13 @@ hl.monitor({
 })
 
 
+-----------------
+---- COLORS -----
+-----------------
+
+local colors = require("colors")
+
+
 ---------------------
 ---- MY PROGRAMS ----
 ---------------------
@@ -96,8 +103,10 @@ hl.config({
         border_size = 2,
 
         col = {
-            active_border   = { colors = {"rgba(a277ffee)", "rgba(7c3aedee)"}, angle = 45 },
-            inactive_border = "rgba(595959aa)",
+            -- Every window gets the same red outline, focused or not —
+            -- no dimming/graying out based on which one you last touched.
+            active_border   = { colors = {colors.rgba(colors.red), colors.rgba(colors.red_bright)}, angle = 45 },
+            inactive_border = { colors = {colors.rgba(colors.red), colors.rgba(colors.red_bright)}, angle = 45 },
         },
 
         -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
