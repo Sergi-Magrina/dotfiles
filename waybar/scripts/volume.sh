@@ -1,0 +1,57 @@
+#!/usr/bin/env bash
+# waybar custom/volume — a bare speaker cone (nf-fa-volume-off, &#xf026;)
+# followed by four radiating sound-wave arcs. Each arc is a ')' glyph, scaled
+# up left→right (70/100/135/170 %) so they fan out like a broadcast/signal icon.
+# An arc lights to the bright-red "activated" tone once the volume passes its
+# threshold — any sound above 0, then 25 / 50 / 75 % — and sits grey below it.
+# When muted, the whole glyph goes grey.
+#
+# Streams live: prints once, then reprints on every PipeWire/Pulse change event
+# (`pactl subscribe`), so dragging the slider or toggling mute updates the arcs
+# instantly. Palette mirrors hypr/colors.lua — keep in sync by hand until the
+# roadmap step 7 palette-templating lands.
+
+RED='#c8102e'         # speaker cone (base) — normal red, unchanged
+RED_BRIGHT='#e8384f'  # an arc that has "lit up" past its threshold
+GRAY='#5a5a5a'        # an arc still below its threshold, or muted
+SINK='@DEFAULT_AUDIO_SINK@'
+ARC=')'               # one radiating arc; ')' is safe literal Pango markup
+THRESH=(1 25 50 75)   # arc lights at: >0 (any sound), 25, 50, 75 %
+
+# Each arc is a scaled ')' that fans out left→right. Because a bigger ')' grows
+# mostly *upward* from the text baseline, a raw scale-up leans the cluster up and
+# off-centre; the per-arc `rise` pushes each larger arc back down so all four
+# stay centred on the cone (a symmetric fan). `letter_spacing` (negative) pulls
+# the arcs closer together. Both are absolute Pango units tuned for the bar's
+# 12px font — re-check them if the bar font-size changes.
+SIZES=(70% 100% 135% 170%)
+RISES=(400 0 -900 -1800)
+SPACING='-1800'
+
+render() {
+    local raw pct muted i col speaker out
+    # "Volume: 0.40" — or "Volume: 0.40 [MUTED]" when muted. wpctl spams RTKit
+    # warnings on stderr in this VM, so drop it.
+    raw=$(wpctl get-volume "$SINK" 2>/dev/null) || return
+    pct=$(awk '{printf "%d", $2 * 100 + 0.5}' <<<"$raw")
+    muted=0
+    if [[ "$raw" == *"[MUTED]"* ]]; then muted=1; fi
+
+    if (( muted )); then speaker=$GRAY; else speaker=$RED; fi
+    out="<span foreground='$speaker'>&#xf026;</span>"
+    out+="<span letter_spacing='$SPACING'> "
+    for i in 0 1 2 3; do
+        if (( muted )) || (( pct < THRESH[i] )); then col=$GRAY; else col=$RED_BRIGHT; fi
+        out+="<span foreground='$col' size='${SIZES[i]}' rise='${RISES[i]}'>$ARC</span>"
+    done
+    out+="</span>"
+    printf '%s\n' "$out"
+}
+
+render
+# Reprint on any sink change (volume/mute) or default-sink change (server).
+pactl subscribe 2>/dev/null | while read -r line; do
+    case "$line" in
+        *"on sink"*|*"on server"*) render ;;
+    esac
+done

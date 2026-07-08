@@ -1,127 +1,108 @@
-/* Color values mirror hypr/colors.lua (red / black theme).
- * Keep the two files in sync manually — CSS can't import the Lua module.
+/* Minimalist red / black waybar. Color values mirror hypr/colors.lua — CSS
+ * can't import the Lua module, so keep them in sync by hand until the roadmap
+ * step 7 palette-templating lands.
  *
- * Rules for this theme:
- *   - background: black, everywhere.
- *   - red: all outlines/separator lines (glowing) AND all text (plain, no glow).
- *   - red-bright: hover / active-state emphasis. */
-@define-color background 	#0d0d0d;
-@define-color red        	#c8102e;
-@define-color red-bright 	#e8384f;
-@define-color gray       	#5a5a5a;
+ * Look: flat matte red-on-black, no glow or shadows. Thin bar, squared, flush
+ * to the top edge. Workspaces on the left show plain white numbers; the active
+ * one becomes a solid red disc with its number knocked out to the bar's black.
+ * Workspace 0 (Control Center) is painted red (see the Pango markup in
+ * config.jsonc). */
 
+@define-color background #0d0d0d;
+@define-color red        #c8102e;
+@define-color red-bright #e8384f;
+@define-color gray       #5a5a5a;
+
+/* Hard reset: kill every inherited border/glow/shadow so the bar is truly flat. */
 * {
     font-family: "JetBrainsMono Nerd Font", monospace;
-    font-size: 13px;
+    font-size: 12px;
     min-height: 0;
+    border: none;
+    border-radius: 0;
+    box-shadow: none;
+    text-shadow: none;
 }
 
 window#waybar {
     background-color: @background;
     color: @red;
-    border: 2px solid @red;
-    box-shadow: 0 0 6px 1px @red, 0 0 14px alpha(@red-bright, 0.55);
+    /* the one permitted detail: a faint hairline to seat the bar on the wallpaper */
+    border-bottom: 1px solid alpha(@red, 0.35);
 }
 
-/* Separator line between every top-level module — glowing red */
-#workspaces,
-#window,
-#clock,
-#pulseaudio,
-#network,
-#cpu,
-#memory,
-#battery {
-    padding: 0 10px;
-    border-right: 2px solid @red;
-    box-shadow: 1px 0 4px @red;
-}
-
-#tray {
-    padding: 0 10px;
-}
-
+/* ---- workspaces (left) ---- */
 #workspaces {
-    margin: 4px 0;
+    padding: 0 4px;
 }
 
-/* Each workspace button separated by its own glowing red line */
 #workspaces button {
-    padding: 0 8px;
-    color: @red;
+    color: #ffffff;            /* inactive numbers: white */
     background: transparent;
-    border-right: 1px solid @red;
-    box-shadow: 1px 0 3px @red;
-}
-
-#workspaces button:last-child {
-    border-right: none;
-    box-shadow: none;
-}
-
-/* Focused workspace gets a red underline glow, text stays red */
-#workspaces button.active {
-    color: @red;
-    border-bottom: 2px solid @red;
-    box-shadow: 0 2px 5px @red;
-}
-
-#workspaces button.urgent {
-    color: @background;
-    background-color: @red;
+    /* square box (min-width == bar height minus the 2px margins) so the
+     * border-radius below yields a true circle, not a horizontal pill */
+    padding: 0;
+    margin: 2px 4px;
+    min-width: 18px;
+    border-radius: 50%;
 }
 
 #workspaces button:hover {
     color: @red-bright;
-    border-bottom: 2px solid @red-bright;
-    box-shadow: 0 2px 4px @red-bright;
+    background: transparent;
 }
 
+/* active workspace = solid red disc, number knocked out to the bar's black.
+ * Declared after :hover so the disc survives while the cursor is over it. */
+#workspaces button.active {
+    color: @background;
+    background-color: @red;
+}
+
+#workspaces button.urgent {
+    color: @background;
+    background-color: @red-bright;
+}
+
+/* ---- window title (left) ---- */
+/* Off the monospace grid: Adwaita Sans (clean humanist UI face), light and
+ * small, dim gray so it recedes behind the workspace numbers. */
 #window {
-    color: @red;
-    font-style: italic;
+    font-family: "Adwaita Sans", sans-serif;
+    font-size: 10px;
+    font-weight: 300;
+    color: @gray;
+    /* pull it a little left, tighter to the workspace numbers */
+    margin-left: -6px;
 }
 
-/* A red underline frames the clock, text stays plain red */
+/* ---- clock (center) ---- */
 #clock {
     color: @red;
     font-weight: bold;
-    border-bottom: 2px solid @red;
-    box-shadow: 0 2px 5px @red;
 }
 
-#cpu,
-#memory,
-#battery,
+/* ---- right side: volume · network · battery · tray ---- */
+/* #custom-volume paints its own glyph colors inline (red cone, bright-red/grey
+ * per arc, and all grey when muted), so it needs no color rule here — only
+ * shared padding. */
+#custom-volume,
 #network,
-#pulseaudio {
+#battery {
     color: @red;
+    padding: 0 4px;
 }
 
-#battery.warning {
-    color: @red-bright;
+#tray {
+    padding: 0 6px;
 }
 
+#battery.warning,
 #battery.critical:not(.charging) {
     color: @red-bright;
-    animation-name: blink;
-    animation-duration: 1s;
-    animation-timing-function: steps(2);
-    animation-iteration-count: infinite;
-}
-
-@keyframes blink {
-    to {
-        color: @background;
-        background-color: @red-bright;
-    }
 }
 
 #network.disconnected {
-    color: @red-bright;
-}
-
-#pulseaudio.muted {
     color: @gray;
 }
 
@@ -129,7 +110,6 @@ window#waybar {
     -gtk-icon-effect: dim;
 }
 
-/* Needs-attention tray icons get a red backdrop */
 #tray > .needs-attention {
     -gtk-icon-effect: highlight;
     background-color: @red;
