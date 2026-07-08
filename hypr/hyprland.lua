@@ -66,6 +66,10 @@ hl.on("hyprland.start", function()
     -- swaybg renders fine under software rendering. Swap the image path
     -- when the custom red/black wallpaper replaces the interim solid.
     hl.exec_cmd("swaybg -i ~/.config/hypr/wallpapers/gargantua.jpg -m fill")
+    -- Control Center (phase 6): spawn the ws-0 placeholder widgets on login.
+    -- The cc-* rules float them onto ws 10 silently, so we stay on ws 1.
+    -- Phase 8 replaces the placeholders inside this script (same app-ids).
+    hl.exec_cmd("~/.config/hypr/scripts/control-center.sh")
     hl.exec_cmd("VBoxClient --clipboard")
 end)
 
