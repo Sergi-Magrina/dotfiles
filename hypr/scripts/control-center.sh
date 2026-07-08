@@ -21,3 +21,17 @@ place cc-todo     "todo list (jarvis)"
 place cc-music    "music player — spotify"
 # NOTE: no window for the "other jarvis things (TBD)" zone — it stays empty
 #       wallpaper until that area is designed.
+
+# Keep the login view on the empty workspace 1. The cc-* rules already use
+# `workspace = "10 silent"` so spawning shouldn't pull focus — and it doesn't
+# once a session is settled — but on a FRESH login (ws 1 not yet the settled
+# active workspace) the first silent spawn still lands the view on ws 10.
+# Verified live: without this, login shows the populated Control Center instead
+# of the empty desktop. So once all four placeholders are actually placed, snap
+# focus back to ws 1. `hyprctl` works here because the script inherits
+# Hyprland's env from the hyprland.start autostart that runs it.
+for _ in $(seq 1 50); do
+    [ "$(hyprctl clients -j | grep -c '"class": "cc-')" -ge 4 ] && break
+    sleep 0.1
+done
+hyprctl dispatch 'hl.dsp.focus({workspace=1})'
