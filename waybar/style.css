@@ -1,17 +1,20 @@
-/* Minimalist red / black waybar. Color values mirror hypr/colors.lua — CSS
- * can't import the Lua module, so keep them in sync by hand until the roadmap
- * step 7 palette-templating lands.
+/* GENERATED FILE — do not edit waybar/style.css by hand.
+ * Source template: theme/templates/style.css.in
+ * Palette:         theme/palettes/<active>.env  (rendered by theme/gen.py)
+ * Edit the template or the palette, then re-run `gen` (waybar doesn't
+ * hot-reload: killall waybar && waybar &).
  *
- * Look: flat matte red-on-black, no glow or shadows. Thin bar, squared, flush
- * to the top edge. Workspaces on the left show plain white numbers; the active
- * one becomes a solid red disc with its number knocked out to the bar's black.
- * Workspace 0 (Control Center) is painted red (see the Pango markup in
- * config.jsonc). */
+ * Look: flat matte accent-on-background, no glow or shadows. Thin bar, squared,
+ * flush to the top edge. Workspaces on the left show plain foreground-coloured
+ * numbers; the active one becomes a solid accent disc with its number knocked
+ * out to the bar's background. Workspace 0 (Control Center) is painted with the
+ * accent (see the Pango markup in config.jsonc). */
 
-@define-color background #0d0d0d;
-@define-color red        #c8102e;
-@define-color red-bright #e8384f;
-@define-color gray       #5a5a5a;
+@define-color background    #0d0d0d;
+@define-color accent        #c8102e;
+@define-color accent-bright #e8384f;
+@define-color muted         #5a5a5a;
+@define-color foreground    #ffffff;
 
 /* Hard reset: kill every inherited border/glow/shadow so the bar is truly flat. */
 * {
@@ -26,9 +29,9 @@
 
 window#waybar {
     background-color: @background;
-    color: @red;
+    color: @accent;
     /* the one permitted detail: a faint hairline to seat the bar on the wallpaper */
-    border-bottom: 1px solid alpha(@red, 0.35);
+    border-bottom: 1px solid alpha(@accent, 0.35);
 }
 
 /* ---- workspaces (left) ---- */
@@ -37,7 +40,7 @@ window#waybar {
 }
 
 #workspaces button {
-    color: #ffffff;            /* inactive numbers: white */
+    color: @foreground;        /* inactive numbers */
     background: transparent;
     /* square box (min-width == bar height minus the 2px margins) so the
      * border-radius below yields a true circle, not a horizontal pill */
@@ -48,48 +51,49 @@ window#waybar {
 }
 
 #workspaces button:hover {
-    color: @red-bright;
+    color: @accent-bright;
     background: transparent;
 }
 
-/* active workspace = solid red disc, number knocked out to the bar's black.
- * Declared after :hover so the disc survives while the cursor is over it. */
+/* active workspace = solid accent disc, number knocked out to the bar's
+ * background. Declared after :hover so the disc survives while the cursor is
+ * over it. */
 #workspaces button.active {
     color: @background;
-    background-color: @red;
+    background-color: @accent;
 }
 
 #workspaces button.urgent {
     color: @background;
-    background-color: @red-bright;
+    background-color: @accent-bright;
 }
 
 /* ---- window title (left) ---- */
 /* Off the monospace grid: Adwaita Sans (clean humanist UI face), light and
- * small, dim gray so it recedes behind the workspace numbers. */
+ * small, muted so it recedes behind the workspace numbers. */
 #window {
     font-family: "Adwaita Sans", sans-serif;
     font-size: 10px;
     font-weight: 300;
-    color: @gray;
+    color: @muted;
     /* pull it a little left, tighter to the workspace numbers */
     margin-left: -6px;
 }
 
 /* ---- clock (center) ---- */
 #clock {
-    color: @red;
+    color: @accent;
     font-weight: bold;
 }
 
 /* ---- right side: volume · network · battery · tray ---- */
-/* #custom-volume paints its own glyph colors inline (red cone, bright-red/grey
- * per arc, and all grey when muted), so it needs no color rule here — only
+/* #custom-volume paints its own glyph colors inline (accent cone, bright/muted
+ * per arc, and all muted when muted), so it needs no color rule here — only
  * shared padding. */
 #custom-volume,
 #network,
 #battery {
-    color: @red;
+    color: @accent;
     padding: 0 4px;
 }
 
@@ -99,11 +103,11 @@ window#waybar {
 
 #battery.warning,
 #battery.critical:not(.charging) {
-    color: @red-bright;
+    color: @accent-bright;
 }
 
 #network.disconnected {
-    color: @gray;
+    color: @muted;
 }
 
 #tray > .passive {
@@ -112,5 +116,5 @@ window#waybar {
 
 #tray > .needs-attention {
     -gtk-icon-effect: highlight;
-    background-color: @red;
+    background-color: @accent;
 }
