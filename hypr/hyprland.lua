@@ -117,8 +117,8 @@ hl.config({
         col = {
             -- Every window gets the same red outline, focused or not —
             -- no dimming/graying out based on which one you last touched.
-            active_border   = { colors = {colors.rgba(colors.red), colors.rgba(colors.red_bright)}, angle = 45 },
-            inactive_border = { colors = {colors.rgba(colors.red), colors.rgba(colors.red_bright)}, angle = 45 },
+            active_border   = { colors = {colors.rgba(colors.accent), colors.rgba(colors.accent_bright)}, angle = 45 },
+            inactive_border = { colors = {colors.rgba(colors.accent), colors.rgba(colors.accent_bright)}, angle = 45 },
         },
 
         -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
