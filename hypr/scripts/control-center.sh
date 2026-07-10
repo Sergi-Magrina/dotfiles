@@ -29,7 +29,9 @@ place() {
 if command -v cava >/dev/null; then
     foot --app-id=cc-cava cava &
 else
-    place cc-cava "cava — audio visualizer (not installed: sudo pacman -S cava)"
+    # keep the label to one line — the cava panel is only a few rows tall,
+    # and a wrapped label scrolls its first line out of view
+    place cc-cava "cava (install: sudo pacman -S cava)"
 fi
 place cc-calendar "calendar  (jarvis)"
 place cc-todo     "todo list (jarvis)"
