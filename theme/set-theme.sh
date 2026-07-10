@@ -54,4 +54,13 @@ fi
 killall waybar 2>/dev/null || true
 setsid waybar >/dev/null 2>&1 &
 
+# The ws-0 Control Center panels (phase 8) re-read their colours only on
+# launch — cava's generated config and the placeholder foots alike — so
+# respawn them: the same "doesn't hot-reload, restart it" pattern as waybar.
+# The pkill pattern matches every `foot --app-id=cc-*` window; --keep-focus
+# skips control-center.sh's login-time snap to ws 1, so a live theme switch
+# doesn't move the view.
+pkill -f -- '--app-id=cc-' 2>/dev/null || true
+setsid "$THEME/../hypr/scripts/control-center.sh" --keep-focus >/dev/null 2>&1 &
+
 echo "set-theme: active palette -> $name"

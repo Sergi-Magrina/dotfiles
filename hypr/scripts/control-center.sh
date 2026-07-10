@@ -8,6 +8,12 @@
 # keep matching without edits. Still placeholders: cc-calendar / cc-todo
 # (gated on Jarvis).
 
+# --keep-focus: skip the login-time snap to ws 1 at the end. Used by
+# set-theme's mid-session respawn (phase 8), where yanking the view to ws 1
+# on every theme switch would be a bug, not a fix.
+keep_focus=0
+[ "${1:-}" = "--keep-focus" ] && keep_focus=1
+
 # place <app-id> <label>: a foot window whose class is <app-id>, showing <label>,
 # held open by `cat` (blocks on the pty until the window is closed).
 place() {
@@ -39,8 +45,10 @@ place cc-music    "music player — spotify"
 # of the empty desktop. So once all four placeholders are actually placed, snap
 # focus back to ws 1. `hyprctl` works here because the script inherits
 # Hyprland's env from the hyprland.start autostart that runs it.
-for _ in $(seq 1 50); do
-    [ "$(hyprctl clients -j | grep -c '"class": "cc-')" -ge 4 ] && break
-    sleep 0.1
-done
-hyprctl dispatch 'hl.dsp.focus({workspace=1})'
+if [ "$keep_focus" -eq 0 ]; then
+    for _ in $(seq 1 50); do
+        [ "$(hyprctl clients -j | grep -c '"class": "cc-')" -ge 4 ] && break
+        sleep 0.1
+    done
+    hyprctl dispatch 'hl.dsp.focus({workspace=1})'
+fi
