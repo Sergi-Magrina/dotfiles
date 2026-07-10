@@ -1,0 +1,27 @@
+# GENERATED FILE — do not edit foot/foot.ini by hand.
+# Source template: theme/templates/foot.ini.in
+# Palette:         theme/palettes/<active>.env  (rendered by theme/gen.py)
+# foot re-reads its config only on launch, so a regenerated file applies to
+# NEW foot windows — reopen a terminal to re-theme it.
+#
+# Whole dir symlinked into place:  ~/.config/foot -> ~/dotfiles/foot
+#
+# Purpose (roadmap step 5): make the terminal's background semi-transparent so
+# the wallpaper shows through *behind* the text, while the text itself stays
+# fully opaque. This is foot's own `alpha` — scoped to foot by definition, not
+# Hyprland's global decoration.opacity. It applies to every foot instance, so
+# both plain terminals (Super+Q) and the yazi file-manager window
+# (foot --app-id=yazi) get it; other apps stay opaque.
+
+# [colors-dark], not [colors]: foot 1.27 split colors into dark/light variants
+# (chosen by the system color-scheme preference) and deprecated the old
+# [colors]. This rice is dark-only, so a single dark block is all we need.
+[colors-dark]
+# 0.0 = fully transparent, 1.0 = fully opaque. Per-theme knob (foot_alpha);
+# final value is a real-hardware judgment (software rendering in the VM can't
+# fairly show it).
+alpha={{foot_alpha}}
+# Only the background is themed here — the transparency reveals the palette
+# background, not foot's default gray. Foreground/ANSI colors stay foot defaults
+# for now (readable); a full per-theme foot palette is deferred to phase 7b.
+background={{background}}

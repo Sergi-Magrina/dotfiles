@@ -1,0 +1,97 @@
+// GENERATED FILE — do not edit waybar/config.jsonc by hand.
+// Source template: theme/templates/config.jsonc.in
+// Palette:         theme/palettes/<active>.env  (rendered by theme/gen.py)
+// The only colour here is the workspace-0 accent in the Pango markup below
+// (CSS can't target a single workspace by number, so it lives inline). Waybar
+// doesn't hot-reload: killall waybar && waybar & to see changes.
+{
+    "layer": "top",
+    "position": "top",
+    "height": 22,
+    "spacing": 14,
+
+    "modules-left": ["hyprland/workspaces", "hyprland/window"],
+    "modules-center": ["clock"],
+    "modules-right": ["custom/volume", "network", "battery", "tray"],
+
+    "hyprland/workspaces": {
+        "format": "{icon}",
+        "on-click": "activate",
+        // Plain numbers (foreground colour, via style.css). Internal ws 10 is
+        // the Control Center — relabel it "0" and paint it with the accent here
+        // (CSS can't target a single workspace by number, so it lives in Pango).
+        "format-icons": {
+            "1": "1",
+            "2": "2",
+            "3": "3",
+            "4": "4",
+            "10": "<span foreground='#{{accent}}'>0</span>",
+            "urgent": "!",
+            "default": "•"
+        },
+        // Always show 1–4 plus the Control Center (0); no phantom ws 5.
+        "persistent-workspaces": {
+            "*": [1, 2, 3, 4, 10]
+        }
+    },
+
+    "hyprland/window": {
+        "max-length": 48,
+        "separate-outputs": true
+    },
+
+    "clock": {
+        "format": "{:%H:%M   %a %d %b}",
+        "tooltip-format": "<big>{:%Y %B}</big>\n<tt><small>{calendar}</small></tt>"
+    },
+
+    // Right-side icons are Nerd Font glyphs written as Pango numeric entities
+    // (&#xNNNN;) rather than literal PUA characters — literals get stripped when
+    // the file is written, and markup is already enabled (same mechanism as the
+    // accent workspace-0 span). Codepoints verified present in the installed
+    // JetBrainsMono Nerd Font (nf-fa for most; ethernet uses nf-md f0200 —
+    // the nf-fa wired-network glyph was dropped in Nerd Fonts v3).
+    "battery": {
+        "states": {
+            "warning": 30,
+            "critical": 15
+        },
+        "format": "{icon}  {capacity}%",
+        "format-charging": "&#xf0e7;  {capacity}%",
+        "format-icons": ["&#xf244;", "&#xf243;", "&#xf242;", "&#xf241;", "&#xf240;"],
+        "tooltip-format": "{capacity}%  ({timeTo})"
+    },
+
+    // Icon only — no essid / ifname text on the bar. wifi fan (nf-fa-wifi),
+    // ethernet plug (nf-md f0200), or the disconnected glyph; the connection
+    // details live in the tooltip.
+    "network": {
+        "format-wifi": "&#xf1eb;",
+        "format-ethernet": "&#xf0200;",
+        "format-disconnected": "&#xf127;",
+        "tooltip-format": "{ifname}: {ipaddr}/{cidr}",
+        "tooltip-format-wifi": "{essid}  ({signalStrength}%)\n{ipaddr}/{cidr}"
+    },
+
+    // Speaker cone + four radiating sound-wave arcs (scaled ')' glyphs that fan
+    // out), each lighting to the bright accent once the volume passes its
+    // 0/25/50/75 % threshold, muted below — a signal-style level meter, no
+    // percentage text. The script streams live off `pactl subscribe`; markup in
+    // its output is rendered (custom modules don't escape by default).
+    //   left-click  → toggle the themed volume slider (drops down under the icon)
+    //   right-click → mute toggle
+    //   scroll      → volume ±5 % (capped at 100 %)
+    "custom/volume": {
+        "exec": "~/.config/waybar/scripts/volume.sh",
+        "format": "{}",
+        "on-click": "~/.config/waybar/scripts/volume-slider-toggle.sh",
+        "on-click-right": "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle",
+        "on-scroll-up": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+ -l 1.0",
+        "on-scroll-down": "wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-",
+        "tooltip": false
+    },
+
+    "tray": {
+        "spacing": 8
+    }
+}
