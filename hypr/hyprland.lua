@@ -115,10 +115,13 @@ hl.config({
         border_size = 2,
 
         col = {
-            -- Every window gets the same red outline, focused or not —
-            -- no dimming/graying out based on which one you last touched.
-            active_border   = { colors = {colors.rgba(colors.accent), colors.rgba(colors.accent_bright)}, angle = 45 },
-            inactive_border = { colors = {colors.rgba(colors.accent), colors.rgba(colors.accent_bright)}, angle = 45 },
+            -- Every window gets the same solid accent outline, focused or not —
+            -- no dimming/graying based on which one you last touched. The accent
+            -- is each theme's single outline colour (red / brown / purple), so
+            -- the border re-tints with the palette (a solid colour, not a
+            -- gradient — one colour per the 2-colour palette model).
+            active_border   = { colors = {colors.rgba(colors.accent)} },
+            inactive_border = { colors = {colors.rgba(colors.accent)} },
         },
 
         -- Set to true to enable resizing windows by clicking and dragging on borders and gaps
