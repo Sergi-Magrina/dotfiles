@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# control-center.sh — spawn the Phase-6 Control Center placeholder windows on
-# workspace 0. Each is a foot window with a unique `cc-*` app-id; the matching
-# window rule in hyprland.lua floats it at a fixed size/position on ws 10.
+# control-center.sh — spawn the Control Center windows on workspace 0. Each
+# has a unique `cc-*` app-id; the matching window rule in hyprland.lua floats
+# it at a fixed size/position on ws 10.
 #
-# PHASE 6 = placeholders only (a label + a held-open terminal). PHASE 8 swaps
-# each `place …` line for the real widget, KEEPING the same app-id, e.g.
-#   foot --app-id=cc-cava cava &
-# so the hyprland.lua rules keep matching without edits.
+# Phase 6 built the frame (all placeholders); phase 8 swaps each `place …`
+# line for the real widget, KEEPING the same app-id so the hyprland.lua rules
+# keep matching without edits. Still placeholders: cc-calendar / cc-todo
+# (gated on Jarvis).
 
 # place <app-id> <label>: a foot window whose class is <app-id>, showing <label>,
 # held open by `cat` (blocks on the pty until the window is closed).
@@ -15,7 +15,16 @@ place() {
         "clear; printf '  %s\n\n  (phase-6 placeholder)\n' \"$2\"; exec cat" &
 }
 
-place cc-cava     "cava — audio visualizer"
+# cava (phase 8a): the real widget — same app-id, so the phase-6 cc-cava float
+# rule still matches with no hyprland.lua edit. Config is the palette-generated
+# cava/config (via ~/.config/cava symlink). Until cava is installed (Sergi's
+# pacman action) fall back to a labelled placeholder, so the panel — and the
+# 4-window focus wait below — keep working either way.
+if command -v cava >/dev/null; then
+    foot --app-id=cc-cava cava &
+else
+    place cc-cava "cava — audio visualizer (not installed: sudo pacman -S cava)"
+fi
 place cc-calendar "calendar  (jarvis)"
 place cc-todo     "todo list (jarvis)"
 place cc-music    "music player — spotify"
