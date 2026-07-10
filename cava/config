@@ -1,0 +1,25 @@
+# GENERATED FILE — do not edit cava/config by hand.
+# Source template: theme/templates/cava.config.in
+# Palette:         theme/palettes/<active>.env  (rendered by theme/gen.py)
+# cava re-reads its config only on launch (or its in-app 'r' reload), so
+# set-theme respawns the cc-cava window to re-theme it on a palette switch.
+#
+# Whole dir symlinked into place:  ~/.config/cava -> ~/dotfiles/cava
+#
+# Everything not set here keeps cava's defaults — [general] bar sizing and
+# [input] autodetect (PipeWire) included. If the bars sit flat in the VM the
+# fix is an audio *monitor* source, not this file (phase-8 spec, 8a notes).
+
+[color]
+# 'default' = don't paint a background at all, inheriting foot's themed,
+# semi-transparent background — so the panel reads as wallpaper-behind, like
+# the other Control Center panels. (Literal cava keyword, not a palette slot.)
+background = default
+
+# Bars fade accent (bottom) -> accent_bright (top) — the palette's normal /
+# hover pairing — so the visualizer re-tints with every theme switch.
+# (Settled with Sergi: gradient over flat accent — phase-8 open decision 3.)
+gradient = 1
+gradient_count = 2
+gradient_color_1 = '#c8102e'
+gradient_color_2 = '#e8384f'

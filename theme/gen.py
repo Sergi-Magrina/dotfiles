@@ -5,7 +5,7 @@ Reads the active palette (theme/palettes/<name>.env, where <name> comes from
 theme/state/active-palette, defaulting to red-black) and renders every colour
 consumer that can't read the palette itself:
 
-  * theme/templates/*.in  ->  the concrete config files (waybar, rofi, foot)
+  * theme/templates/*.in  ->  the concrete config files (waybar, rofi, foot, cava)
   * theme/colors.env       <- KEY='#hex' for the volume scripts to source/read
 
 Hyprland's colours are NOT rendered here: hypr/colors.lua reads the same palette
@@ -32,6 +32,7 @@ TEMPLATES = {
     "config.jsonc.in":  REPO / "waybar" / "config.jsonc",
     "config.rasi.in":   REPO / "rofi" / "config.rasi",
     "foot.ini.in":      REPO / "foot" / "foot.ini",
+    "cava.config.in":   REPO / "cava" / "config",
 }
 
 # colors.env keys (UPPERCASE, '#'-prefixed) <- palette slots (bare hex).
