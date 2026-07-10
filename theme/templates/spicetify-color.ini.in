@@ -1,0 +1,39 @@
+; GENERATED FILE — do not edit spicetify/color.ini by hand.
+; Source template: theme/templates/spicetify-color.ini.in
+; Palette:         theme/palettes/<active>.env  (rendered by theme/gen.py)
+;
+; Phase 8c: re-skins the Spotify DESKTOP CLIENT to the palette (separate from
+; the cc-music now-playing widget). Prepared in the VM, applied on real
+; hardware — Spotify is Electron and likely won't run under the VM's software
+; GPU. Hardware setup, once Spotify + spicetify-cli (AUR) are installed:
+;
+;   mkdir -p ~/.config/spicetify/Themes/rice
+;   ln -s ~/dotfiles/spicetify/color.ini ~/.config/spicetify/Themes/rice/color.ini
+;   spicetify config current_theme rice
+;   spicetify backup apply        # first time; plain `apply` afterwards
+;
+; set-theme runs `spicetify apply` automatically when the binary exists
+; (Sergi's call: the client is part of the live theme loop). NB: Spotify
+; auto-updates routinely break Spicetify — re-run `spicetify apply` after one.
+;
+; Values are bare hex (no '#'), spicetify's classic format — the palette slots
+; drop straight in. Mapping follows the rice's semantics (accent = text /
+; interactive, accent_bright = hover/active, muted = disabled); it has NOT
+; been seen on a live client yet — eyeball-tune on hardware.
+
+[Base]
+text               = {{accent}}
+subtext            = {{foreground}}
+main               = {{background}}
+sidebar            = {{background}}
+player             = {{background}}
+card               = {{background}}
+shadow             = {{background}}
+selected-row       = {{accent_bright}}
+button             = {{accent}}
+button-active      = {{accent_bright}}
+button-disabled    = {{muted}}
+tab-active         = {{accent}}
+notification       = {{accent}}
+notification-error = {{accent_bright}}
+misc               = {{muted}}
