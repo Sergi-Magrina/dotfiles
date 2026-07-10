@@ -74,4 +74,13 @@ for c in json.load(sys.stdin):
 ' 2>/dev/null || pkill -f -- '--app-id=cc-' 2>/dev/null || true
 setsid "$THEME/../hypr/scripts/control-center.sh" --keep-focus >/dev/null 2>&1 &
 
+# Spicetify (phase 8c — Sergi's call: the Spotify client IS part of the live
+# theme loop). gen already rewrote spicetify/color.ini above; `spicetify
+# apply` re-patches the client and restarts it to pick the colours up. That's
+# heavy, so it runs detached — and only where spicetify exists at all: it's
+# absent in the VM, making this a no-op until real hardware.
+if command -v spicetify >/dev/null; then
+    setsid spicetify apply >/dev/null 2>&1 &
+fi
+
 echo "set-theme: active palette -> $name"
