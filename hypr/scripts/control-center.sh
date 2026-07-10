@@ -33,7 +33,18 @@ else
 fi
 place cc-calendar "calendar  (jarvis)"
 place cc-todo     "todo list (jarvis)"
-place cc-music    "music player — spotify"
+# music widget (phase 8b): GTK now-playing panel driven by playerctl/MPRIS
+# (hypr/scripts/cc-music.py). It sets its own app_id to cc-music via
+# GLib.set_prgname, so the same phase-6 rule floats it — verify the class on
+# its first real launch. Needs python-gobject (import gi must give PyGObject,
+# not the bare at-spi2-core namespace stub — hence the require_version probe);
+# fall back to a labelled placeholder until it's installed.
+if python3 -c 'import gi; gi.require_version' 2>/dev/null \
+        && command -v playerctl >/dev/null; then
+    "$(dirname "$(realpath "$0")")/cc-music.py" &
+else
+    place cc-music "music player — spotify (needs: sudo pacman -S python-gobject playerctl)"
+fi
 # NOTE: no window for the "other jarvis things (TBD)" zone — it stays empty
 #       wallpaper until that area is designed.
 

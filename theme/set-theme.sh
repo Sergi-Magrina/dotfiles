@@ -55,12 +55,23 @@ killall waybar 2>/dev/null || true
 setsid waybar >/dev/null 2>&1 &
 
 # The ws-0 Control Center panels (phase 8) re-read their colours only on
-# launch — cava's generated config and the placeholder foots alike — so
-# respawn them: the same "doesn't hot-reload, restart it" pattern as waybar.
-# The pkill pattern matches every `foot --app-id=cc-*` window; --keep-focus
-# skips control-center.sh's login-time snap to ws 1, so a live theme switch
-# doesn't move the view.
-pkill -f -- '--app-id=cc-' 2>/dev/null || true
+# launch — cava's generated config, the GTK music widget, and the placeholder
+# foots alike — so respawn them: the same "doesn't hot-reload, restart it"
+# pattern as waybar. Kill by window CLASS (exactly what the cc-* rules match):
+# that covers foot panels and the GTK widget alike, and unlike a pkill -f on
+# script paths it can't graze an unrelated process (e.g. an editor) whose
+# command line merely mentions a cc-* file. If hyprctl is unreachable, fall
+# back to pkill'ing the foot panels. --keep-focus skips control-center.sh's
+# login-time snap to ws 1, so a live theme switch doesn't move the view.
+hyprctl clients -j 2>/dev/null | python3 -c '
+import json, os, signal, sys
+for c in json.load(sys.stdin):
+    if c["class"].startswith("cc-"):
+        try:
+            os.kill(c["pid"], signal.SIGTERM)
+        except (ProcessLookupError, PermissionError):
+            pass
+' 2>/dev/null || pkill -f -- '--app-id=cc-' 2>/dev/null || true
 setsid "$THEME/../hypr/scripts/control-center.sh" --keep-focus >/dev/null 2>&1 &
 
 echo "set-theme: active palette -> $name"
