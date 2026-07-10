@@ -26,11 +26,10 @@ printf '%s\n' "$name" > "$THEME/state/active-palette"
 
 python3 "$THEME/gen.py"
 
-# --- restart waybar (no hot-reload) ----------------------------------------
-# From a Hyprland keybind these are already in the environment; when they're not
-# (e.g. a detached shell), recover them from the live session — otherwise the
-# hyprland/* modules disable themselves and waybar can't reach the display. Read
-# waybar's env BEFORE killing it.
+# --- re-read the new colours on the live session ---------------------------
+# From a Hyprland keybind HYPRLAND_INSTANCE_SIGNATURE / WAYLAND_DISPLAY are
+# already set; when run detached, recover them from the live session (read
+# waybar's env BEFORE we kill it) so hyprctl and waybar can reach Hyprland.
 if [ -z "${HYPRLAND_INSTANCE_SIGNATURE:-}" ]; then
     for d in "${XDG_RUNTIME_DIR:-/run/user/$(id -u)}"/hypr/*/; do
         [ -S "$d/.socket.sock" ] && export HYPRLAND_INSTANCE_SIGNATURE="$(basename "$d")" && break
@@ -42,6 +41,16 @@ if [ -z "${WAYLAND_DISPLAY:-}" ]; then
         | grep -m1 '^WAYLAND_DISPLAY=' | cut -d= -f2)"
 fi
 
+# Hyprland re-runs colors.lua only on reload, and the gen write doesn't touch
+# any file it watches — so without this nudge the window borders keep the old
+# palette (the reason a switch used to leave every outline red). `hyprctl reload`
+# re-reads config (colours/binds/rules) but does NOT re-fire the hyprland.start
+# event, so autostart (waybar/swaybg/Control Center) is left untouched.
+if [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ] && command -v hyprctl >/dev/null; then
+    hyprctl reload >/dev/null 2>&1 || true
+fi
+
+# waybar doesn't hot-reload at all -> restart it.
 killall waybar 2>/dev/null || true
 setsid waybar >/dev/null 2>&1 &
 
