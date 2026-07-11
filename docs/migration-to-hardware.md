@@ -27,9 +27,10 @@ can eat a weekend — but there are two easy exits):
 2. **Display wired to the Nvidia card only:** use **nouveau**, the open
    driver already inside `mesa` — zero extra packages, runs Hyprland
    acceptably for desktop use.
-3. **Proprietary driver (last resort):** only worth it if the card is Turing
-   (GTX 16xx/RTX) or newer — that's mainline `nvidia`. Older cards need AUR
-   legacy `-dkms` builds (Maxwell/Pascal → `nvidia-580xx-dkms`, Kepler →
+3. **Vendor driver (last resort):** only worth it if the card is Turing
+   (GTX 16xx/RTX) or newer — that's `nvidia-open` + `nvidia-utils` (the
+   closed `nvidia` package no longer exists in the repos). Older cards need
+   AUR legacy `-dkms` builds (Maxwell/Pascal → `nvidia-580xx-dkms`, Kepler →
    `nvidia-470xx-dkms`) that are rough under Wayland; prefer option 2.
 
 ---

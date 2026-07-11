@@ -105,9 +105,9 @@ mesa                    # userspace OpenGL — needed by every vendor
 #   vulkan-intel
 #   intel-media-driver
 #
-# AMD (integrated or dedicated):
+# AMD (integrated or dedicated) — video decode (VA-API) is inside mesa now
+# (the old standalone libva-mesa-driver package no longer exists):
 #   vulkan-radeon
-#   libva-mesa-driver
 #
 # Nvidia (older dedicated card — CHECK first; the migration doc has the full
 # decision tree). Short version:
@@ -115,10 +115,12 @@ mesa                    # userspace OpenGL — needed by every vendor
 #     the Intel block above and leave the Nvidia card idle — nothing to add.
 #   * Display wired to the Nvidia card only: nouveau (already in mesa) runs
 #     Hyprland fine for a rice — nothing to add.
-#   * Proprietary driver, only if genuinely needed AND the card is new enough:
-#     mainline `nvidia` covers Turing (GTX 16xx/RTX) and newer; Maxwell/Pascal
+#   * Vendor driver, only if genuinely needed AND the card is new enough:
+#     the repos now ship ONLY nvidia-open (the closed `nvidia` package is
+#     gone), which covers Turing (GTX 16xx/RTX) and newer. Maxwell/Pascal
 #     need AUR nvidia-580xx-dkms, Kepler AUR nvidia-470xx-dkms (rough under
 #     Wayland — prefer nouveau). Any -dkms build also needs linux-headers.
-#   nvidia
+#   nvidia-open
+#   nvidia-utils
 #   egl-wayland
 #   linux-headers
