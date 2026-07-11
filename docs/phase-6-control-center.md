@@ -174,10 +174,13 @@ live**. Border/rounding is "inherited" (global) for all of them.
 | Widget | app-id | Phase-6 launch (placeholder) | size (`w% h%`) | move (`x% y%`) | Border/round | Real or placeholder |
 |---|---|---|---|---|---|---|
 | cava (visualizer) | `cc-cava` | `foot --app-id=cc-cava …label…` | `30% 15%` | `3% 82%` | inherited | **Placeholder** → cava (P8) |
-| calendar (jarvis) | `cc-calendar` | `foot --app-id=cc-calendar …label…` | `20% 34%` | `56% 6%` | inherited | **Placeholder** → app (P8) |
-| todo list (jarvis) | `cc-todo` | `foot --app-id=cc-todo …label…` | `22% 34%` | `77% 6%` | inherited | **Placeholder** → app (P8) |
+| calendar (jarvis) | `cc-calendar` | `foot --app-id=cc-calendar …label…` | `26% 34%` | `56% 6%` | inherited | **Placeholder** → app (P8) |
+| todo list (jarvis) | `cc-todo` | `foot --app-id=cc-todo …label…` | `16% 34%` | `83% 6%` | inherited | **Placeholder** → app (P8) |
 | music (spotify) | `cc-music` | `foot --app-id=cc-music …label…` | `31% 33%` | `66% 60%` | inherited | **Placeholder** → widget (P8) |
 | other jarvis (TBD) | — | *(none — reserved empty space)* | — | — | — | **Empty** (undesigned) |
+
+> Calendar/todo widths re-split 2026-07-11 (Sergi): calendar wider than todo
+> (~1.6:1, matching the sketch), same height. Originally `20%`/`22%`.
 
 > `6%` top-row `y` clears the 22px waybar comfortably on 1080p (~65px). If a
 > top-row panel tucks under the bar on the real monitor, nudge `y` up a couple

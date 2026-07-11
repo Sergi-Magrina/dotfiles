@@ -481,7 +481,9 @@ hl.window_rule({
     name      = "cc-calendar",              -- upper middle-right: calendar (jarvis)
     match     = { class = "^cc-calendar$" },
     float     = true,
-    size      = "monitor_w*0.20 monitor_h*0.34",
+    -- calendar/todo width split is ~1.6:1 (per the vision sketch + Sergi,
+    -- 2026-07-11): calendar gets the width, both keep the same height
+    size      = "monitor_w*0.26 monitor_h*0.34",
     move      = "monitor_w*0.56 monitor_h*0.06",
     workspace = "10 silent",
 })
@@ -490,8 +492,8 @@ hl.window_rule({
     name      = "cc-todo",                  -- upper-right: todo list (jarvis)
     match     = { class = "^cc-todo$" },
     float     = true,
-    size      = "monitor_w*0.22 monitor_h*0.34",
-    move      = "monitor_w*0.77 monitor_h*0.06",
+    size      = "monitor_w*0.16 monitor_h*0.34",
+    move      = "monitor_w*0.83 monitor_h*0.06",
     workspace = "10 silent",
 })
 
