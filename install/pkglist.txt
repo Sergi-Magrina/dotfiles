@@ -11,6 +11,10 @@
 #   - DROPPED: virtualbox-guest-utils  (VM-only — do NOT install on real HW)
 #   - ADDED:   a GPU driver, intel-ucode, efibootmgr, os-prober
 #              (see the "REAL HARDWARE ONLY" section at the bottom)
+#   - ADDED (2026-07-11 audit): packages the configs already depend on but the
+#     `pacman -Qqen` export missed (deps aren't listed as explicit), plus
+#     desktop plumbing a VM hides but real hardware wants: portals, a polkit
+#     agent, screen lock, clipboard CLI, fonts. Marked "audit" below.
 # ─────────────────────────────────────────────────────────────
 
 # --- Base system (archinstall usually lays these down; --needed skips dupes) ---
@@ -31,6 +35,11 @@ waybar
 mako                    # notification daemon
 swaybg                  # wallpaper daemon currently IN USE (see vm-substitutions.md)
 hyprpaper               # real-HW target — decide swaybg vs hyprpaper per vm-substitutions.md
+hyprlock                # audit: screen lock — shared family laptop, lock from day one
+hypridle                # audit: idle daemon (locks/dims on idle, lid) — needs a config, see migration doc
+xdg-desktop-portal-hyprland  # audit: screen sharing + app portals under Hyprland
+xdg-desktop-portal-gtk       # audit: file-picker dialogs (Firefox etc.) via the portal
+hyprpolkitagent         # audit: GUI privilege prompts — without an agent they fail silently
 
 # --- Launcher ---
 rofi                    # NOTE: phase-3 intent was rofi-wayland; this VM has plain `rofi`.
@@ -45,6 +54,8 @@ kitty                   # real-HW target — crashed in the VM; retest, keep foo
 firefox                 # browser (workspace 3)
 yazi                    # file manager (workspace 2)
 cava                    # audio visualizer (Control Center, workspace 0)
+playerctl               # audit: media keybinds + cc-music widget — was only a dep in the VM,
+                        # so the -Qqen export missed it; without it both silently degrade
 
 # --- Audio stack (PipeWire) ---
 pipewire
@@ -57,13 +68,21 @@ libpulse
 
 # --- Fonts ---
 ttf-jetbrains-mono-nerd # waybar's Nerd Font glyphs depend on this — don't skip it
+noto-fonts              # audit: general text fallback — only present as a dep in the VM
+noto-fonts-emoji        # audit: emoji in Firefox / notifications render as boxes without it
 
 # --- Tooling / misc ---
 grim                    # screenshots
+slurp                   # audit: region select for grim (Shift+Print keybind)
+wl-clipboard            # audit: wl-copy / wl-paste — the clipboard CLI scripts + yazi expect
+brightnessctl           # audit: hyprland.lua already binds the brightness keys to it
 nano
 less
+python                  # audit: theme/gen.py + the widgets — was only a transitive dep
 python-gobject
-zram-generator          # compressed swap
+pacman-contrib          # audit: paccache — enable paccache.timer to trim the package cache
+zram-generator          # compressed swap — NEEDS install/etc/zram-generator.conf copied to
+                        # /etc/systemd/ or it does nothing (see migration doc step 4)
 grub                    # bootloader — reused to host the Windows dual-boot menu
 
 # ─────────────────────────────────────────────────────────────
@@ -90,8 +109,16 @@ mesa                    # userspace OpenGL — needed by every vendor
 #   vulkan-radeon
 #   libva-mesa-driver
 #
-# Nvidia (older dedicated card — CHECK first; old cards may need the legacy
-# driver or fall back to the open `nouveau` in mesa. This is the one vendor
-# that can turn the install from an afternoon into a weekend):
+# Nvidia (older dedicated card — CHECK first; the migration doc has the full
+# decision tree). Short version:
+#   * Laptop is likely OPTIMUS (Intel iGPU + Nvidia dGPU): run the desktop on
+#     the Intel block above and leave the Nvidia card idle — nothing to add.
+#   * Display wired to the Nvidia card only: nouveau (already in mesa) runs
+#     Hyprland fine for a rice — nothing to add.
+#   * Proprietary driver, only if genuinely needed AND the card is new enough:
+#     mainline `nvidia` covers Turing (GTX 16xx/RTX) and newer; Maxwell/Pascal
+#     need AUR nvidia-580xx-dkms, Kepler AUR nvidia-470xx-dkms (rough under
+#     Wayland — prefer nouveau). Any -dkms build also needs linux-headers.
 #   nvidia
 #   egl-wayland
+#   linux-headers
