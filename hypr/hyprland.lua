@@ -70,7 +70,9 @@ hl.on("hyprland.start", function()
     -- The cc-* rules float them onto ws 10 silently, so we stay on ws 1.
     -- Phase 8 replaces the placeholders inside this script (same app-ids).
     hl.exec_cmd("~/.config/hypr/scripts/control-center.sh")
-    hl.exec_cmd("VBoxClient --clipboard")
+    -- VM-only: guarded so the same config is inert on real hardware (no
+    -- VBoxClient binary there). Delete the line once the VM is retired.
+    hl.exec_cmd("command -v VBoxClient >/dev/null && VBoxClient --clipboard")
 end)
 
 -------------------------------
