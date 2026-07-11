@@ -46,6 +46,16 @@ somewhere the laptop can reach, or the migration has nothing to clone.
       `~/dotfiles` folder to a USB stick as a fallback.
 - [ ] The package list + scripts are already committed in `install/` — make
       sure they went up with everything else.
+- [ ] **Make the Arch install USB.** Download the ISO from
+      <https://archlinux.org/download/> (grab a mirror near you), verify the
+      checksum against the one on that page, and write it to a spare USB
+      stick — from Windows use Rufus (or Ventoy), from Linux
+      `sudo dd if=archlinux-*.iso of=/dev/sdX bs=4M status=progress oflag=sync`
+      (double-check `/dev/sdX` with `lsblk` — dd to the wrong disk is
+      unrecoverable). This is a *different* stick than the dotfiles-backup
+      one, or at least a Ventoy stick that can hold both.
+- [ ] Have the **Wi-Fi password** written down somewhere — the fresh install
+      has no saved networks and no browser to look it up with.
 
 ---
 
@@ -65,6 +75,16 @@ make room next to it.
       right-click C: → Shrink Volume). Free up as much as you want for Arch
       (e.g. 60–120 GB). Leave the freed space **unallocated** — the Arch
       installer will use it.
+- [ ] **Pre-empt the dual-boot clock skew** (while you're already in
+      Windows). Linux keeps the hardware clock in UTC, Windows in local time
+      — so after every Arch boot, Windows shows a wrong clock (the family
+      *will* notice). Fix it by telling Windows to use UTC too — in an
+      **admin** Command Prompt:
+      ```
+      reg add "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v RealTimeIsUniversal /t REG_DWORD /d 1
+      ```
+      (The Linux-side alternative — `timedatectl set-local-rtc 1` — is
+      discouraged; it confuses timesync and DST handling.)
 
 Golden rule: **Windows first, Arch second.** Windows overwrites bootloaders;
 installing Arch last means its GRUB detects Windows and adds it to the menu.
