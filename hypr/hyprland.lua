@@ -341,6 +341,12 @@ hl.bind("XF86AudioPause", hl.dsp.exec_cmd("playerctl play-pause"), { locked = tr
 hl.bind("XF86AudioPlay",  hl.dsp.exec_cmd("playerctl play-pause"), { locked = true })
 hl.bind("XF86AudioPrev",  hl.dsp.exec_cmd("playerctl previous"),   { locked = true })
 
+-- Screenshots (grim). Timestamped PNGs into ~/Pictures/screenshots.
+-- Shift+Print = region select — needs slurp (in pkglist; if the bind does
+-- nothing in the VM, it's not installed yet: sudo pacman -S slurp).
+hl.bind("Print",           hl.dsp.exec_cmd("mkdir -p ~/Pictures/screenshots && grim ~/Pictures/screenshots/$(date +%F-%H%M%S).png"))
+hl.bind("SHIFT + Print",   hl.dsp.exec_cmd('mkdir -p ~/Pictures/screenshots && grim -g "$(slurp)" ~/Pictures/screenshots/$(date +%F-%H%M%S).png'))
+
 
 --------------------------------
 ---- WINDOWS AND WORKSPACES ----
