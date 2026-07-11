@@ -2,6 +2,12 @@
 __pycache__/
 *.pyc
 
+# cava writes its stock example themes/shaders into ~/.config/cava on first
+# run — which is a symlink into this repo. They're upstream defaults, not our
+# config (ours is cava/config, generated from the palette), so keep them out.
+cava/themes/
+cava/shaders/
+
 # Live theme selections (phase 7): local runtime state, like the wallpaper.
 # The committed defaults (red-black palette, frozen swaybg line) are the
 # fallback when these are absent, so a fresh clone works with no state.
