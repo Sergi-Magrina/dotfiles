@@ -1,11 +1,9 @@
 # Migration: VM "workshop" → HP Pavilion "showroom"
 
-Moving this rice off the VirtualBox VM onto real hardware, **alongside a
-preserved Windows** so family can still use the laptop. *(Reconsidering as of
-2026-07-11: the family may be done with this laptop, in which case Windows
-gets wiped and Arch takes the whole disk — that would delete Step 1 and the
-os-prober / clock-skew pieces. Steps below still describe dual-boot until
-that's decided.)*
+Moving this rice off the VirtualBox VM onto real hardware. **Decided
+2026-07-11: the family is done with this laptop — Windows gets wiped and Arch
+takes the whole disk.** No dual-boot, which deletes the partition-shrinking,
+os-prober, and clock-skew work that used to live in this plan.
 
 The config migration is easy (everything's one symlinked repo). The real work
 is the OS install and the GPU driver.
@@ -62,52 +60,37 @@ somewhere the laptop can reach, or the migration has nothing to clone.
 
 ---
 
-## Step 1 — Preserve Windows for the family (do this IN Windows, first)
+## Step 1 — Last call on Windows (one-time salvage)
 
-The Pavilion almost certainly still has its original Windows. Keep it; just
-make room next to it.
+Windows is getting wiped, so this boot is the only chance to pull anything
+off it.
 
-- [ ] **Back up anything the family cares about** — resizing partitions is
-      low-risk but not zero-risk.
-- [ ] **Disable Fast Startup** (Control Panel → Power Options → "Choose what
-      the power buttons do" → uncheck Fast Startup). It leaves the Windows
-      filesystem half-locked and can corrupt a shared disk.
-- [ ] **Check for BitLocker** — if the drive is encrypted, suspend/disable it
-      before resizing, or Windows may demand a recovery key at next boot.
-- [ ] **Shrink the Windows partition** from *inside* Windows (Disk Management →
-      right-click C: → Shrink Volume). Free up as much as you want for Arch
-      (e.g. 60–120 GB). Leave the freed space **unallocated** — the Arch
-      installer will use it.
-- [ ] **Pre-empt the dual-boot clock skew** (while you're already in
-      Windows). Linux keeps the hardware clock in UTC, Windows in local time
-      — so after every Arch boot, Windows shows a wrong clock (the family
-      *will* notice). Fix it by telling Windows to use UTC too — in an
-      **admin** Command Prompt:
-      ```
-      reg add "HKLM\SYSTEM\CurrentControlSet\Control\TimeZoneInformation" /v RealTimeIsUniversal /t REG_DWORD /d 1
-      ```
-      (The Linux-side alternative — `timedatectl set-local-rtc 1` — is
-      discouraged; it confuses timesync and DST handling.)
+- [ ] **Copy off anything anyone still wants** — family photos, documents,
+      browser bookmarks/passwords, game saves — onto a USB stick or cloud
+      storage. Once Step 2 runs, the disk is gone for good. If in doubt,
+      copy it; a stick of "maybe" files is cheap insurance.
+- [ ] While you're still in Windows, it's also the convenient place to
+      **write the Arch USB with Rufus** and note the Wi-Fi password (both
+      from Step 0), if you haven't already.
 
-Golden rule: **Windows first, Arch second.** Windows overwrites bootloaders;
-installing Arch last means its GRUB detects Windows and adds it to the menu.
-Since Windows is already there, you're naturally in the right order.
+Everything else this step used to contain — Fast Startup, BitLocker,
+partition shrinking, the UTC clock registry fix — was a dual-boot concern
+and is irrelevant on a full wipe.
 
 ---
 
-## Step 2 — Install Arch (into the free space, next to Windows)
+## Step 2 — Install Arch (whole disk)
 
 - [ ] In BIOS/UEFI: disable **Secure Boot** (simplest path for an Arch
       install — it can be kept later with extra work). Note whether the machine
       boots **UEFI** (almost certainly) vs legacy BIOS.
 - [ ] Boot the Arch ISO from USB.
 - [ ] Run **`archinstall`** — the guided installer. Key choices:
-      - **Disk:** use *manual partitioning* and install into the **unallocated
-        space only**. Do **not** wipe the disk (that erases Windows).
-      - Create an Arch root (and swap if you like; you also have
-        `zram-generator` for compressed swap).
-      - **Reuse the existing EFI partition** (the small ~100–500 MB FAT32 one
-        Windows already made) as your `/boot` EFI mount — don't make a second.
+      - **Disk:** select the laptop's internal drive and choose the **wipe /
+        "erase disk and use a best-effort default layout"** option. This is
+        the moment Windows ceases to exist — Step 1's salvage must be done.
+        Skip a swap partition if offered; `zram-generator` (already in the
+        repo's `/etc` recipe) covers swap.
       - **Bootloader: GRUB** (matches this repo's `grub` package).
       - Set hostname, root password, your user (`sergi`), timezone.
       - Profile: **minimal** — you'll install the desktop from `pkglist.txt`,
@@ -116,18 +99,12 @@ Since Windows is already there, you're naturally in the right order.
 
 ---
 
-## Step 3 — First boot: network, then make Windows show in the menu
+## Step 3 — First boot: network
 
 - [ ] Bring up networking:
       `sudo systemctl enable --now NetworkManager` then `nmtui` for Wi-Fi.
-- [ ] **Enable os-prober** so GRUB lists Windows. Edit `/etc/default/grub`,
-      set `GRUB_DISABLE_OS_PROBER=false`, then regenerate:
-      ```
-      sudo grub-mkconfig -o /boot/grub/grub.cfg
-      ```
-      Reboot once and confirm **both Arch and Windows appear** in the GRUB
-      menu. (If Windows is missing, it's almost always this flag or a still-on
-      Fast Startup from Step 1.)
+      (Arch is the only OS on the disk now — GRUB boots straight into it, no
+      os-prober needed.)
 
 ---
 
