@@ -41,8 +41,13 @@ applies):
 The repo currently lives in **exactly one place with no git remote.** Get it
 somewhere the laptop can reach, or the migration has nothing to clone.
 
-- [ ] Commit the in-flight work (dirty tree across waybar/cava/spicetify) so
-      you migrate a clean, known state. Don't move mid-edit.
+- [x] Commit the in-flight work (dirty tree across waybar/cava/spicetify) so
+      you migrate a clean, known state. Don't move mid-edit. *(Done
+      2026-07-11. Note: `git status` still shows the palette-generated files
+      (waybar/cava/foot/mako/rofi/spicetify/`theme/colors.env`) as modified —
+      that's the **live purple-blue theme switch**, which stays uncommitted
+      by design, like the wallpaper: committed defaults remain red-black, and
+      `theme/set-theme.sh purple-blue` reproduces the look on the laptop.)*
 - [ ] Push to a remote you own (GitHub — `Sergi-Magrina`), **or** copy the whole
       `~/dotfiles` folder to a USB stick as a fallback.
 - [ ] The package list + scripts are already committed in `install/` — make
