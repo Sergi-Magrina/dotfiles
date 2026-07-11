@@ -134,6 +134,13 @@ until that phase lands, treat it as the single fixed theme.
      comes first.
    - Reframes the fixed-theme stance in the Color palette section above: the
      black/red theme becomes the *default* palette, one of several.
+   - **Full spec: `docs/phase-7-selectable-palettes.md`.** Two things settled
+     since this brief was written: the palette is actually hardcoded in **seven**
+     files (+ the wallpaper), not three; and **theme and wallpaper are independent
+     axes** — choose each freely (wallpaper is *not* a per-theme field, and its
+     live selection stays local, honoring the "don't commit wallpaper" rule). The
+     pick-now UI is a **rofi** menu; a full settings app is its own later phase
+     (step 9).
 8. **Deferred / later work** (do not start until 1–7 are solid):
    - Install + configure `cava`
    - Build a Spotify now-playing + basic controls widget
@@ -146,6 +153,20 @@ until that phase lands, treat it as the single fixed theme.
      out. Two Jarvis-fed terminal panes are planned eventually (one showing
      live agent actions/commands, one showing memory/context retrieval) but
      are explicitly out of scope until called for directly.
+9. **Settings app** (a *frontend* — do not start until phase 7's switch
+   mechanisms exist; this is a GUI *over* them, not a prerequisite for anything).
+   Goal: a clean graphical surface to choose the theme and wallpaper (and, over
+   time, other runtime knobs), superseding phase 7's interim rofi picker. Because
+   the switches are clean CLIs (`set-theme`, `set-wallpaper`), the app is a thin
+   layer buildable whenever after step 7.
+   - **Ordering, not strictly last:** depends only on step 7; runs parallel to
+     step 8's deferred items and is **independent of Jarvis** (which remains the
+     final integration within step 8). Listed at 9 for placement, not because it
+     comes after everything.
+   - **Shape/tech intentionally open** — standalone GUI vs a Control Center
+     (workspace 0) panel; toolkit TBD (e.g. GTK, a webview, or eww/quickshell,
+     possibly shared with the Control Center widgets). Decide once the mechanisms
+     are real and the desired scope is clearer. Ask, don't assume.
 
 ---
 
