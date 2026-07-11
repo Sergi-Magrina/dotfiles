@@ -153,6 +153,11 @@ until that phase lands, treat it as the single fixed theme.
      out. Two Jarvis-fed terminal panes are planned eventually (one showing
      live agent actions/commands, one showing memory/context retrieval) but
      are explicitly out of scope until called for directly.
+     **Called for (2026-07-11): the calendar + todo widgets only** — the
+     first Jarvis slice, coordinated with a second Claude Code session in
+     the jarvis repo (Sergi relays documents between them). Living doc:
+     `docs/jarvis-integration.md`. The terminal panes / notepad / voice
+     remain out of scope.
 9. **Settings app** (a *frontend* — do not start until phase 7's switch
    mechanisms exist; this is a GUI *over* them, not a prerequisite for anything).
    Goal: a clean graphical surface to choose the theme and wallpaper (and, over

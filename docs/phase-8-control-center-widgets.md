@@ -284,6 +284,10 @@ against unresolved decisions:
   spots; phase 8 leaves the placeholders until Jarvis exists. When the real apps
   land they're GUIs → set `app_id = cc-calendar`/`cc-todo` or repoint those rules
   (verify class live), exactly as phase 6 documented.
+  **Gate lifted 2026-07-11 for these two panels only** — Sergi called for the
+  first Jarvis slice directly. Coordination + current state:
+  [jarvis-integration.md](jarvis-integration.md) (that doc wins over this
+  bullet for anything integration-related).
 - **The centre-left "other jarvis (TBD)" zone.** Undesigned; stays empty
   wallpaper (phase-6 Open decision 1 was to leave it blank). Needs a layout
   decision before anything goes there.
