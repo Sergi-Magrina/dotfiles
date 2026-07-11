@@ -54,6 +54,10 @@ fi
 killall waybar 2>/dev/null || true
 setsid waybar >/dev/null 2>&1 &
 
+# mako DOES hot-reload, but only when told — no-op if it isn't running yet
+# (it's D-Bus-activated on the first notification and reads the fresh config).
+command -v makoctl >/dev/null && makoctl reload 2>/dev/null || true
+
 # The ws-0 Control Center panels (phase 8) re-read their colours only on
 # launch — cava's generated config, the GTK music widget, and the placeholder
 # foots alike — so respawn them: the same "doesn't hot-reload, restart it"

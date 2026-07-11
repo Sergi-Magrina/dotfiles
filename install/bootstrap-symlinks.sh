@@ -37,6 +37,7 @@ link foot   foot
 link theme  theme
 link rofi   rofi
 link cava   cava
+link mako   mako
 
 # --- waybar: directory stays real, only these are linked ---
 link waybar/config.jsonc  waybar/config.jsonc

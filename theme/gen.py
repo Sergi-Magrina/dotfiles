@@ -33,6 +33,7 @@ TEMPLATES = {
     "config.rasi.in":   REPO / "rofi" / "config.rasi",
     "foot.ini.in":      REPO / "foot" / "foot.ini",
     "cava.config.in":   REPO / "cava" / "config",
+    "mako.config.in":   REPO / "mako" / "config",
     # Spotify client re-skin (phase 8c) — rendered here, but only *applied*
     # where spicetify exists (real hardware); see the template's header.
     "spicetify-color.ini.in": REPO / "spicetify" / "color.ini",

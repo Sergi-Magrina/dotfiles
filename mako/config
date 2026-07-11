@@ -1,0 +1,28 @@
+# GENERATED FILE — do not edit mako/config by hand.
+# Source template: theme/templates/mako.config.in
+# Palette:         theme/palettes/<active>.env  (rendered by theme/gen.py)
+#
+# mako needs no autostart line: it's D-Bus-activated, spawning on the first
+# notification. It DOES hot-reload — set-theme runs `makoctl reload`, so a
+# running daemon re-reads this on a palette switch (unlike waybar).
+#
+# Colours follow the palette; the shape mirrors decisions already made
+# elsewhere in the rice: 2px border (window border_size), radius 10
+# (decoration rounding), waybar's JetBrainsMono Nerd Font. Everything not set
+# here (top-right anchor, 300px width, ...) is mako's default.
+
+font=JetBrainsMono Nerd Font 11
+background-color=#0d0d0d
+text-color=#ffffff
+border-color=#c8102e
+border-size=2
+border-radius=10
+# progress bar (e.g. volume notifications) drawn over the body in the bright accent
+progress-color=over #e8384f
+# auto-dismiss after 5s; mako's default (0) keeps some notifications forever
+default-timeout=5000
+
+# urgent notifications: flip to the bright accent and stay until dismissed
+[urgency=critical]
+border-color=#e8384f
+default-timeout=0
