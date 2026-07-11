@@ -1,23 +1,26 @@
 # Migration: VM "workshop" → HP Pavilion "showroom"
 
 Moving this rice off the VirtualBox VM onto real hardware, **alongside a
-preserved Windows** so family can still use the laptop.
+preserved Windows** so family can still use the laptop. *(Reconsidering as of
+2026-07-11: the family may be done with this laptop, in which case Windows
+gets wiped and Arch takes the whole disk — that would delete Step 1 and the
+os-prober / clock-skew pieces. Steps below still describe dual-boot until
+that's decided.)*
 
 The config migration is easy (everything's one symlinked repo). The real work
-is the OS install and the GPU driver. Rough time: an afternoon if the GPU is
-Intel/AMD, a weekend if it's older Nvidia.
+is the OS install and the GPU driver.
 
-**The one open variable:** which GPU the Pavilion has. Find out *before* the
-driver step — it decides which package block to uncomment in
-[`install/pkglist.txt`](../install/pkglist.txt):
+**The one open variable — RESOLVED (2026-07-11).** Confirmed specs:
+i5-8250U, 12 GB RAM, and **two** display adapters — Intel UHD Graphics 620 +
+NVIDIA GeForce MX130. That's Optimus, option 1 below (the happy path): the
+**Intel** block in [`install/pkglist.txt`](../install/pkglist.txt) is now
+uncommented, and the MX130 is ignored — it's Maxwell, so a vendor driver
+would mean the rough AUR `nvidia-580xx-dkms` path, pointless for a rice;
+nouveau (already inside mesa) binds the idle card and powers it down. Time
+estimate: the "afternoon", not the "weekend".
 
-- **From Windows:** Device Manager → *Display adapters* (Windows has no
-  `lspci`). Seeing **two** adapters (Intel HD/UHD + an Nvidia GeForce) means
-  Optimus — the happy path below.
-- **From a live USB:** `lspci | grep -EA3 'VGA|3D'`.
-
-**The Nvidia decision tree** (an old GeForce + Wayland is the one combo that
-can eat a weekend — but there are two easy exits):
+**The Nvidia decision tree** (kept for reference — option 1 is the one that
+applies):
 
 1. **Optimus laptop (most likely).** The Intel iGPU drives the screen; the
    Nvidia card is an optional helper. Uncomment the **Intel** block, ignore

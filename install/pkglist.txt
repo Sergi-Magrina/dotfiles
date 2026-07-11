@@ -98,12 +98,11 @@ os-prober               # lets GRUB detect Windows and add it to the boot menu
 
 # --- GPU driver ---
 mesa                    # userspace OpenGL — needed by every vendor
-# Then UNCOMMENT the block matching the Pavilion's GPU.
-# Find it with:  lspci | grep -EA3 'VGA|3D'
-#
-# Intel integrated:
-#   vulkan-intel
-#   intel-media-driver
+# GPU confirmed 2026-07-11 (Windows Device Manager): Intel UHD Graphics 620
+# + NVIDIA GeForce MX130 = Optimus. Desktop runs on the Intel iGPU; the
+# MX130 stays ignored (see the migration doc) — so the Intel block is live:
+vulkan-intel
+intel-media-driver
 #
 # AMD (integrated or dedicated) — video decode (VA-API) is inside mesa now
 # (the old standalone libva-mesa-driver package no longer exists):
