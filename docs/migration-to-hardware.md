@@ -55,15 +55,15 @@ SSH key is registered on the account).
 - [x] The package list + scripts are already committed in `install/` — make
       sure they went up with everything else. *(Verified: all four `install/`
       files are on `origin/master`.)*
-- [ ] **Plan the laptop's clone auth.** The repo is *private*, and at Step 4
-      the fresh install has no browser and no GitHub credentials, so an
-      anonymous `git clone` will be refused. Pick one before wiping:
-      (a) create a **fine-grained read-only PAT** (github.com → Settings →
-      Developer settings → tokens) and write it down next to the Wi-Fi
-      password — the HTTPS clone prompts for it as the password;
-      (b) flip the repo **public** (it's only dotfiles);
-      (c) generate an SSH key on the laptop at Step 4 and add it to GitHub
-      from your phone. The USB-stick fallback also sidesteps this entirely.
+- [ ] **Flip the repo public** (clone-auth decision, made 2026-07-12: public
+      beats a read-only PAT / phone-added SSH key / USB copy — the laptop
+      then clones with no credentials at all). On GitHub: repo →
+      **Settings → General → Danger Zone → Change visibility → Make
+      public.** Verify from any shell:
+      ```
+      GIT_TERMINAL_PROMPT=0 git ls-remote https://github.com/Sergi-Magrina/dotfiles.git
+      ```
+      — refs listed = public; a username prompt/error = still private.
 - [ ] **Make the Arch install USB.** Download the ISO from
       <https://archlinux.org/download/> (grab a mirror near you), verify the
       checksum against the one on that page, and write it to a spare USB
@@ -130,8 +130,8 @@ and is irrelevant on a full wipe.
 - [ ] Clone the repo to the same path the configs expect:
       ```
       git clone https://github.com/Sergi-Magrina/dotfiles.git ~/dotfiles
-      # (HTTPS prompts for the read-only PAT from Step 0 — or use the
-      #  git@github.com: SSH form / copy from the USB, per the auth choice)
+      # (repo is public — anonymous HTTPS clone, no credentials needed;
+      #  or copy from the USB stick to ~/dotfiles)
       ```
 - [ ] Install packages (the grep strips comments before pacman):
       ```
