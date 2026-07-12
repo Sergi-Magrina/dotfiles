@@ -38,8 +38,9 @@ applies):
 
 ## Step 0 — On the VM, before you touch the laptop
 
-The repo currently lives in **exactly one place with no git remote.** Get it
-somewhere the laptop can reach, or the migration has nothing to clone.
+~~The repo currently lives in exactly one place with no git remote.~~ Done:
+it's pushed to **`github.com/Sergi-Magrina/dotfiles`** (private; the VM's
+SSH key is registered on the account).
 
 - [x] Commit the in-flight work (dirty tree across waybar/cava/spicetify) so
       you migrate a clean, known state. Don't move mid-edit. *(Done
@@ -48,10 +49,21 @@ somewhere the laptop can reach, or the migration has nothing to clone.
       that's the **live purple-blue theme switch**, which stays uncommitted
       by design, like the wallpaper: committed defaults remain red-black, and
       `theme/set-theme.sh purple-blue` reproduces the look on the laptop.)*
-- [ ] Push to a remote you own (GitHub — `Sergi-Magrina`), **or** copy the whole
-      `~/dotfiles` folder to a USB stick as a fallback.
-- [ ] The package list + scripts are already committed in `install/` — make
-      sure they went up with everything else.
+- [x] Push to a remote you own (GitHub — `Sergi-Magrina`), **or** copy the whole
+      `~/dotfiles` folder to a USB stick as a fallback. *(Pushed 2026-07-12,
+      `origin/master` = `db37c3e`.)*
+- [x] The package list + scripts are already committed in `install/` — make
+      sure they went up with everything else. *(Verified: all four `install/`
+      files are on `origin/master`.)*
+- [ ] **Plan the laptop's clone auth.** The repo is *private*, and at Step 4
+      the fresh install has no browser and no GitHub credentials, so an
+      anonymous `git clone` will be refused. Pick one before wiping:
+      (a) create a **fine-grained read-only PAT** (github.com → Settings →
+      Developer settings → tokens) and write it down next to the Wi-Fi
+      password — the HTTPS clone prompts for it as the password;
+      (b) flip the repo **public** (it's only dotfiles);
+      (c) generate an SSH key on the laptop at Step 4 and add it to GitHub
+      from your phone. The USB-stick fallback also sidesteps this entirely.
 - [ ] **Make the Arch install USB.** Download the ISO from
       <https://archlinux.org/download/> (grab a mirror near you), verify the
       checksum against the one on that page, and write it to a spare USB
@@ -117,7 +129,9 @@ and is irrelevant on a full wipe.
 
 - [ ] Clone the repo to the same path the configs expect:
       ```
-      git clone <your-remote> ~/dotfiles      # or copy from the USB to ~/dotfiles
+      git clone https://github.com/Sergi-Magrina/dotfiles.git ~/dotfiles
+      # (HTTPS prompts for the read-only PAT from Step 0 — or use the
+      #  git@github.com: SSH form / copy from the USB, per the auth choice)
       ```
 - [ ] Install packages (the grep strips comments before pacman):
       ```
