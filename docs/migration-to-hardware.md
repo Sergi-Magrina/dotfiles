@@ -55,7 +55,7 @@ SSH key is registered on the account).
 - [x] The package list + scripts are already committed in `install/` — make
       sure they went up with everything else. *(Verified: all four `install/`
       files are on `origin/master`.)*
-- [ ] **Flip the repo public** (clone-auth decision, made 2026-07-12: public
+- [x] **Flip the repo public** (clone-auth decision, made 2026-07-12: public
       beats a read-only PAT / phone-added SSH key / USB copy — the laptop
       then clones with no credentials at all). On GitHub: repo →
       **Settings → General → Danger Zone → Change visibility → Make
