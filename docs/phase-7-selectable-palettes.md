@@ -110,10 +110,33 @@ theme/
 
 `hypr/colors.lua` (the shim) and `gen` read `state/active-palette`, falling back
 to **red-black** when it's absent — so a fresh clone works with no state. The
-live wallpaper is read from `state/active-wallpaper`, falling back to the frozen
-committed `swaybg` line. Both state files are **gitignored** — the live
-selections are local, exactly as the "don't commit wallpaper changes" rule wants;
-the committed defaults (red-black palette, Gargantua wallpaper line) never move.
+live wallpaper is read from `state/active-wallpaper`, falling back to the
+committed `path` in `hypr/hyprpaper.conf`. Both state files are **gitignored** —
+the live selections are local, exactly as the "don't commit wallpaper changes"
+rule wants.
+
+> **Amended 2026-07-20 — the generated configs are no longer committed.**
+> Originally the red-black renderings were committed as the fresh-clone
+> baseline, and a palette switch left all nine files dirty in `git status`
+> "by design". That backfired: a session tidied the dirty files with
+> `git checkout`, which reverted them to red-black but left
+> `state/active-palette` still reading `purple-blue` — so the state file and
+> the actual desktop disagreed, silently.
+>
+> They're now **gitignored build artifacts**, rendered from
+> `templates/*.in` + `palettes/*.env`. `gen.py` runs at bootstrap
+> (`install/bootstrap-symlinks.sh`, *before* the symlinks — `link()` skips a
+> missing source) and again at every login (`hypr/hyprland.lua`, at parse
+> time via a blocking `os.execute`, so waybar and the Control Center find
+> their configs already written). The palette **selection** is the only
+> persisted thing; the configs are re-derived from it.
+>
+> Consequences: switching palettes never dirties the tree, drift is
+> structurally impossible, red-black remains the default via the
+> `DEFAULT_PALETTE` constants in `gen.py`/`colors.lua` rather than via
+> committed file contents, and a palette choice now survives a reboot on its
+> own. The acceptance test at the bottom of this doc ("the generated files
+> match what's committed") no longer applies — nothing is committed to match.
 
 **One palette format, readable by all three languages.** Make the palette a
 plain `key=hex` file:

@@ -49,6 +49,10 @@ SSH key is registered on the account).
       that's the **live purple-blue theme switch**, which stays uncommitted
       by design, like the wallpaper: committed defaults remain red-black, and
       `theme/set-theme.sh purple-blue` reproduces the look on the laptop.)*
+      **Superseded 2026-07-20:** the generated files aren't committed at all
+      any more — they're gitignored build artifacts regenerated at bootstrap
+      and login, so `git status` no longer shows them. See
+      `docs/phase-7-selectable-palettes.md`.
 - [x] Push to a remote you own (GitHub — `Sergi-Magrina`), **or** copy the whole
       `~/dotfiles` folder to a USB stick as a fallback. *(Pushed 2026-07-12,
       `origin/master` = `db37c3e`.)*

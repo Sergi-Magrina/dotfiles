@@ -9,6 +9,31 @@ cava/themes/
 cava/shaders/
 
 # Live theme selections (phase 7): local runtime state, like the wallpaper.
-# The committed defaults (red-black palette, frozen swaybg line) are the
-# fallback when these are absent, so a fresh clone works with no state.
+# When these are absent — a fresh clone — every consumer falls back to the
+# DEFAULT palette (red-black), so the repo always comes up on the default theme.
 theme/state/
+
+# Palette-generated configs (phase 7): BUILD ARTIFACTS, not source. The source
+# is theme/templates/*.in + theme/palettes/*.env; these are what theme/gen.py
+# renders from whichever palette is active.
+#
+# They're ignored rather than committed so that switching palettes at runtime
+# doesn't leave nine files permanently dirty in `git status` — which is what
+# used to happen, and which caused a real drift bug: a session cleaned up the
+# dirty files with `git checkout`, reverting them to red-black while
+# theme/state/active-palette still claimed purple-blue, so the state file
+# disagreed with the actual desktop.
+#
+# Nothing is lost by not committing them: gen.py runs at bootstrap
+# (install/bootstrap-symlinks.sh) and again at every login (hypr/hyprland.lua),
+# so they're always present and always match the active palette.
+waybar/style.css
+waybar/config.jsonc
+rofi/config.rasi
+foot/foot.ini
+kitty/kitty.conf
+cava/config
+mako/config
+spicetify/color.ini
+vscodium/settings.json
+theme/colors.env

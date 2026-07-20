@@ -17,6 +17,19 @@ set -euo pipefail
 DOTFILES="${DOTFILES:-$HOME/dotfiles}"
 CONFIG="$HOME/.config"
 
+# Render the palette-generated configs BEFORE linking anything. They're build
+# artifacts, not committed (see .gitignore), so on a fresh clone they don't
+# exist yet — and link() SKIPS a missing source, which would silently leave
+# waybar, kitty, foot, rofi, cava and mako unlinked and unconfigured.
+#
+# With no theme/state/active-palette on a fresh clone, gen.py falls back to its
+# DEFAULT_PALETTE (red-black), so a first bootstrap always lands on the default
+# theme. Hyprland re-runs this on every login too (see hyprland.lua), which is
+# what makes a palette switch survive a reboot.
+echo "GEN     palette-generated configs"
+python3 "$DOTFILES/theme/gen.py"
+echo
+
 link() {
     local src="$DOTFILES/$1" dest="$CONFIG/$2"
     if [[ ! -e "$src" ]]; then
@@ -51,6 +64,9 @@ link waybar/style.css     waybar/style.css
 
 # --- VSCodium: directory stays real, only the generated settings are linked ---
 link vscodium/settings.json  VSCodium/User/settings.json
+
+# --- spotify-launcher: single file, lands at the top of ~/.config (not a dir) ---
+link spotify/spotify-launcher.conf  spotify-launcher.conf
 
 # --- hypr: directory stays real, only these are linked ---
 link hypr/wallpapers    hypr/wallpapers

@@ -27,6 +27,26 @@ hl.monitor({
 ---- COLORS -----
 -----------------
 
+-- Render every templated colour consumer (waybar CSS + config, rofi, kitty,
+-- foot, mako, cava, spicetify, VSCodium) from the ACTIVE palette.
+--
+-- Those files are build artifacts and are NOT committed (see .gitignore), so
+-- this is what puts them on disk — a fresh clone has none until bootstrap or
+-- this line runs. It's also what makes a `set-theme` switch survive a reboot:
+-- the palette choice lives in theme/state/active-palette, and the configs are
+-- re-derived from it at every login rather than being stored.
+--
+-- Ordering matters and is the reason this sits here, at parse time, rather than
+-- in the hyprland.start autostart below: os.execute BLOCKS, and this whole file
+-- is parsed before any autostart fires — so waybar and the Control Center are
+-- guaranteed to find their configs already written. Firing it as one more
+-- exec_cmd would race them.
+--
+-- Failure is deliberately non-fatal (`or true`-style: the status is ignored).
+-- A missing python or a broken template should leave you with stale-but-working
+-- configs and a usable desktop, not a compositor that won't start.
+os.execute((os.getenv("HOME") or "") .. "/.config/theme/gen.py >/dev/null 2>&1")
+
 local colors = require("colors")
 
 
