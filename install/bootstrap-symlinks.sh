@@ -39,6 +39,11 @@ link rofi   rofi
 link cava   cava
 link mako   mako
 
+# --- kitty: directory stays real, only the generated config is linked ---
+# (foot is linked whole-directory above; kitty follows waybar's pattern instead
+# so kitty's own runtime files — sessions, cache — stay out of the repo.)
+link kitty/kitty.conf  kitty/kitty.conf
+
 # --- waybar: directory stays real, only these are linked ---
 link waybar/config.jsonc  waybar/config.jsonc
 link waybar/scripts       waybar/scripts
