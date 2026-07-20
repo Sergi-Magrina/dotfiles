@@ -44,6 +44,9 @@ link waybar/config.jsonc  waybar/config.jsonc
 link waybar/scripts       waybar/scripts
 link waybar/style.css     waybar/style.css
 
+# --- VSCodium: directory stays real, only the generated settings are linked ---
+link vscodium/settings.json  VSCodium/User/settings.json
+
 # --- hypr: directory stays real, only these are linked ---
 link hypr/wallpapers    hypr/wallpapers
 link hypr/scripts       hypr/scripts

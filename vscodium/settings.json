@@ -1,0 +1,120 @@
+// GENERATED FILE — do not edit.
+// Written by theme/gen.py from the active palette (theme/palettes/<name>.env).
+// Edit theme/templates/vscodium-settings.json.in instead, then re-run
+// `theme/gen.py` (or `theme/set-theme.sh <name>`).
+//
+// VSCodium reads this live — it watches settings.json — so a theme switch
+// re-skins the editor instantly, with no reload and no equivalent of foot's
+// pkill -USR1 dance (see the phase-7 spec's "Reload-heterogeneity" note).
+//
+// CAVEAT: settings you change through VSCodium's GUI are written straight to
+// the generated file and will be lost on the next `gen`. Anything you want to
+// keep belongs in the USER SETTINGS block at the bottom of THIS template.
+{
+  // ---- palette-driven colours (roadmap step 7) ----
+  "workbench.colorCustomizations": {
+    // editor surface
+    "editor.background": "#0d0d0d",
+    "editor.foreground": "#ffffff",
+    "editorCursor.foreground": "#c8102e",
+    "editor.selectionBackground": "#c8102e44",
+    "editor.lineHighlightBackground": "#c8102e14",
+    "editorLineNumber.foreground": "#5a5a5a",
+    "editorLineNumber.activeForeground": "#c8102e",
+    "editorWhitespace.foreground": "#5a5a5a",
+    "editorIndentGuide.background1": "#5a5a5a",
+    "editorIndentGuide.activeBackground1": "#c8102e",
+
+    // activity bar (far-left icon strip)
+    "activityBar.background": "#0d0d0d",
+    "activityBar.foreground": "#c8102e",
+    "activityBar.inactiveForeground": "#5a5a5a",
+    "activityBar.border": "#5a5a5a",
+    "activityBarBadge.background": "#c8102e",
+    "activityBarBadge.foreground": "#0d0d0d",
+
+    // side bar (explorer / search)
+    "sideBar.background": "#0d0d0d",
+    "sideBar.foreground": "#ffffff",
+    "sideBar.border": "#5a5a5a",
+    "sideBarTitle.foreground": "#c8102e",
+    "sideBarSectionHeader.background": "#0d0d0d",
+    "sideBarSectionHeader.foreground": "#c8102e",
+
+    // tabs
+    "editorGroupHeader.tabsBackground": "#0d0d0d",
+    "tab.activeBackground": "#0d0d0d",
+    "tab.activeForeground": "#c8102e",
+    "tab.activeBorderTop": "#c8102e",
+    "tab.inactiveBackground": "#0d0d0d",
+    "tab.inactiveForeground": "#5a5a5a",
+    "tab.border": "#0d0d0d",
+
+    // status bar
+    "statusBar.background": "#0d0d0d",
+    "statusBar.foreground": "#c8102e",
+    "statusBar.border": "#5a5a5a",
+    "statusBar.noFolderBackground": "#0d0d0d",
+    "statusBarItem.hoverBackground": "#e8384f",
+
+    // title bar
+    "titleBar.activeBackground": "#0d0d0d",
+    "titleBar.activeForeground": "#c8102e",
+    "titleBar.inactiveBackground": "#0d0d0d",
+    "titleBar.inactiveForeground": "#5a5a5a",
+    "titleBar.border": "#5a5a5a",
+
+    // integrated terminal — matches foot
+    "terminal.background": "#0d0d0d",
+    "terminal.foreground": "#ffffff",
+    "terminalCursor.foreground": "#c8102e",
+
+    // panel (terminal / problems / output)
+    "panel.background": "#0d0d0d",
+    "panel.border": "#5a5a5a",
+    "panelTitle.activeForeground": "#c8102e",
+    "panelTitle.inactiveForeground": "#5a5a5a",
+
+    // lists, inputs, buttons
+    "list.activeSelectionBackground": "#c8102e",
+    "list.activeSelectionForeground": "#0d0d0d",
+    "list.inactiveSelectionBackground": "#c8102e33",
+    "list.hoverBackground": "#c8102e22",
+    "list.highlightForeground": "#e8384f",
+    "button.background": "#c8102e",
+    "button.foreground": "#0d0d0d",
+    "button.hoverBackground": "#e8384f",
+    "input.background": "#0d0d0d",
+    "input.foreground": "#ffffff",
+    "input.border": "#5a5a5a",
+    "inputOption.activeBorder": "#c8102e",
+    "dropdown.background": "#0d0d0d",
+    "dropdown.border": "#5a5a5a",
+
+    // chrome odds and ends
+    "focusBorder": "#c8102e",
+    "badge.background": "#c8102e",
+    "badge.foreground": "#0d0d0d",
+    "progressBar.background": "#c8102e",
+    "scrollbarSlider.background": "#5a5a5a66",
+    "scrollbarSlider.hoverBackground": "#c8102e66",
+    "scrollbarSlider.activeBackground": "#c8102e",
+    "widget.border": "#5a5a5a",
+    "editorWidget.background": "#0d0d0d",
+    "editorWidget.border": "#5a5a5a",
+    "quickInput.background": "#0d0d0d",
+    "quickInputList.focusBackground": "#c8102e",
+    "quickInputList.focusForeground": "#0d0d0d",
+    "menu.background": "#0d0d0d",
+    "menu.foreground": "#ffffff",
+    "menu.selectionBackground": "#c8102e",
+    "menu.selectionForeground": "#0d0d0d"
+  },
+
+  // ==== USER SETTINGS ====
+  // Put your own preferences here (in the TEMPLATE, not the generated file).
+  // Nothing below is palette-driven; `gen` copies it through untouched.
+  "workbench.colorTheme": "Default Dark Modern",
+  "editor.fontSize": 14,
+  "telemetry.telemetryLevel": "off"
+}

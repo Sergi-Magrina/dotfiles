@@ -37,6 +37,9 @@ TEMPLATES = {
     # Spotify client re-skin (phase 8c) — rendered here, but only *applied*
     # where spicetify exists (real hardware); see the template's header.
     "spicetify-color.ini.in": REPO / "spicetify" / "color.ini",
+    # VSCodium: the whole settings.json is generated, colours and user prefs
+    # alike — VSCodium watches the file, so a theme switch re-skins it live.
+    "vscodium-settings.json.in": REPO / "vscodium" / "settings.json",
 }
 
 # colors.env keys (UPPERCASE, '#'-prefixed) <- palette slots (bare hex).
