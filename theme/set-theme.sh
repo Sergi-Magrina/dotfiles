@@ -46,7 +46,7 @@ fi
 # any file it watches — so without this nudge the window borders keep the old
 # palette (the reason a switch used to leave every outline red). `hyprctl reload`
 # re-reads config (colours/binds/rules) but does NOT re-fire the hyprland.start
-# event, so autostart (waybar/swaybg/Control Center) is left untouched.
+# event, so autostart (waybar/hyprpaper/Control Center) is left untouched.
 if [ -n "${HYPRLAND_INSTANCE_SIGNATURE:-}" ] && command -v hyprctl >/dev/null; then
     hyprctl reload >/dev/null 2>&1 || true
 fi

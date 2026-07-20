@@ -66,11 +66,11 @@ hl.on("hyprland.start", function()
     -- No autostart terminal: ws 1 is a plain empty desktop (wallpaper +
     -- waybar only) on login. Open a terminal on demand with Super+Q.
     hl.exec_cmd("waybar")
-    -- swaybg, not hyprpaper: hyprpaper needs a real GL/EGL context this
-    -- VM's software-rendered GPU can't provide (same reason kitty crashes).
-    -- swaybg renders fine under software rendering. Swap the image path
-    -- when the custom red/black wallpaper replaces the interim solid.
-    hl.exec_cmd("swaybg -i ~/.config/hypr/wallpapers/gargantua.jpg -m fill")
+    -- hyprpaper on real hardware (the VM's software-rendered GPU couldn't give
+    -- it the GL/EGL context it needs, so the workshop used swaybg — see
+    -- vm-substitutions.md). The image lives in hyprpaper.conf, NOT here:
+    -- runtime swaps go through theme/set-wallpaper.sh over hyprpaper's IPC.
+    hl.exec_cmd("hyprpaper")
     -- Control Center (phase 6): spawn the ws-0 placeholder widgets on login.
     -- The cc-* rules float them onto ws 10 silently, so we stay on ws 1.
     -- Phase 8 replaces the placeholders inside this script (same app-ids).
@@ -243,7 +243,7 @@ hl.config({
 
 hl.config({
     misc = {
-        -- These only show when NO wallpaper daemon is drawing (i.e. swaybg
+        -- These only show when NO wallpaper daemon is drawing (i.e. hyprpaper
         -- died or hasn't started). Make that fallback plain black instead of
         -- Hyprland's random anime-mascot default — on-theme even when broken.
         force_default_wallpaper = 0,
