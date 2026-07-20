@@ -12,11 +12,45 @@ set -euo pipefail
 THEME="$(dirname "$(realpath "$0")")"
 
 usage() {
-    echo "usage: set-theme <name>" >&2
+    echo "usage: set-theme <name>      switch the live palette" >&2
+    echo "       set-theme --list      palette names, one per line" >&2
+    echo "       set-theme --current   the palette actually in use" >&2
+    echo "       set-theme --default   the fallback palette name" >&2
     echo "palettes:" >&2
     for f in "$THEME"/palettes/*.env; do echo "  $(basename "${f%.env}")"; done >&2
     exit 1
 }
+
+# Must match gen.py's DEFAULT_PALETTE and colors.lua's DEFAULT — the value every
+# consumer falls back to when no palette is selected.
+DEFAULT_PALETTE="red-black"
+
+# --- query interface (phase 9) ---------------------------------------------
+# A frontend (the settings app; today theme/pick.sh) needs to render the list of
+# palettes and show which one is live. Both answers come from here rather than
+# each frontend re-implementing "read the state file, handle the fallbacks" —
+# there are three fallback cases below and a UI getting them wrong shows the
+# user a theme they aren't running. Output is one item per line on STDOUT,
+# nothing else, exit 0, and the live session is left untouched.
+case "${1:-}" in
+    --list)
+        for f in "$THEME"/palettes/*.env; do basename "${f%.env}"; done
+        exit 0 ;;
+    --current)
+        # Report what the desktop is ACTUALLY using, which is not simply the
+        # file's contents: absent, empty, or naming a palette that no longer
+        # exists all mean every consumer falls back to the default.
+        cur="$DEFAULT_PALETTE"
+        if [ -r "$THEME/state/active-palette" ]; then
+            n="$(tr -d '[:space:]' < "$THEME/state/active-palette")"
+            [ -n "$n" ] && [ -f "$THEME/palettes/$n.env" ] && cur="$n"
+        fi
+        printf '%s\n' "$cur"
+        exit 0 ;;
+    --default)
+        printf '%s\n' "$DEFAULT_PALETTE"
+        exit 0 ;;
+esac
 
 name="${1:-}"
 [ -n "$name" ] || usage

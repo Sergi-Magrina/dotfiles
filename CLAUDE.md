@@ -166,6 +166,14 @@ until that phase lands, treat it as the single fixed theme.
    time, other runtime knobs), superseding phase 7's interim rofi picker. Because
    the switches are clean CLIs (`set-theme`, `set-wallpaper`), the app is a thin
    layer buildable whenever after step 7.
+   - **The CLI contract it builds on** (added 2026-07-20, so the app never
+     parses `theme/state/` itself). Both switches answer the same four calls:
+     `<cmd> <value>` to set, `--list` for the options (one per line on
+     stdout), `--current` for what's **actually** in use, `--default` for the
+     fallback. `--current` is not just the state file's contents — absent,
+     empty, or naming a palette/image that no longer exists all resolve to the
+     default, because that's what the desktop is really showing. A frontend
+     that read the state file directly would highlight the wrong theme.
    - **Ordering, not strictly last:** depends only on step 7; runs parallel to
      step 8's deferred items and is **independent of Jarvis** (which remains the
      final integration within step 8). Listed at 9 for placement, not because it

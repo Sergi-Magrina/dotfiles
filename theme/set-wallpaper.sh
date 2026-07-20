@@ -14,9 +14,35 @@ REPO="$(dirname "$THEME")"
 WALLDIR="$REPO/hypr/wallpapers"
 DEFAULT="$WALLDIR/gargantua.jpg"   # frozen committed default (fallback)
 
+# --- query interface (phase 9) ---------------------------------------------
+# Mirrors set-theme.sh's flags so a frontend drives both axes the same way:
+# absolute paths, one per line on STDOUT, exit 0, session untouched.
+case "${1:-}" in
+    --list)
+        for f in "$WALLDIR"/*; do [ -f "$f" ] && printf '%s\n' "$f"; done
+        exit 0 ;;
+    --current)
+        # As in set-theme: report what's ACTUALLY showing. A state file naming
+        # an image that has since been deleted means hyprpaper is on the
+        # committed default, so that's what a UI should highlight.
+        cur="$DEFAULT"
+        if [ -r "$THEME/state/active-wallpaper" ]; then
+            w="$(head -1 "$THEME/state/active-wallpaper")"
+            [ -n "$w" ] && [ -f "$w" ] && cur="$w"
+        fi
+        printf '%s\n' "$cur"
+        exit 0 ;;
+    --default)
+        printf '%s\n' "$DEFAULT"
+        exit 0 ;;
+esac
+
 arg="${1:-}"
 if [ -z "$arg" ]; then
-    echo "usage: set-wallpaper <image>" >&2
+    echo "usage: set-wallpaper <image>    swap the live wallpaper" >&2
+    echo "       set-wallpaper --list     wallpaper paths, one per line" >&2
+    echo "       set-wallpaper --current  the wallpaper actually showing" >&2
+    echo "       set-wallpaper --default  the committed fallback path" >&2
     echo "wallpapers in $WALLDIR:" >&2
     for f in "$WALLDIR"/*; do echo "  $(basename "$f")"; done >&2
     exit 1
