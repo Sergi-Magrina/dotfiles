@@ -172,12 +172,16 @@ and is irrelevant on a full wipe.
 Walk [`vm-substitutions.md`](../vm-substitutions.md) row by row now that you
 have a real GPU:
 
-- [ ] **Terminal:** launch `kitty` — it should work now. If happy, rebind to
-      it; keep `foot` installed as the fallback.
-- [ ] **Wallpaper:** decide `swaybg` vs `hyprpaper`. Per the repo's own notes,
-      for a single static wallpaper they're equivalent — only switch to
-      hyprpaper if you want its runtime switching / per-monitor features (which
-      phase 7's theme-swap might make attractive).
+- [x] **Terminal:** kitty works on the Pavilion (0.48.0-1) and is now the
+      repo's terminal — Hyprland's `terminal`/`fileManager`, the Control
+      Center panels, and a palette-generated `kitty/kitty.conf`. `foot` stays
+      installed and generated as the fallback. **Done 2026-07-20.**
+- [x] **Wallpaper:** switched to `hyprpaper` (0.8.4-3). Phase 7 made the
+      "only if you want its extras" case real — `set-wallpaper.sh` now swaps
+      over hyprpaper's IPC inside the running daemon (no flicker), instead of
+      killing and respawning swaybg. `swaybg` stays installed as the
+      fallback. **Done 2026-07-20.** Watch out for the 0.8.x syntax rewrite —
+      see `vm-substitutions.md`.
 - [ ] `virtualbox-guest-utils` is already absent (not in `pkglist.txt`) —
       nothing to remove.
 - [ ] The `VBoxClient --clipboard` autostart line in `hyprland.lua` is

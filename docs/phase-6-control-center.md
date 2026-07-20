@@ -53,7 +53,7 @@ Reading it, clockwise:
 ```
 
 - **cava** (sketch writes "caba") — bottom-left corner. The audio visualizer.
-  The **only** foot/TUI widget (see decision 2).
+  The **only** terminal/TUI widget (see decision 2).
 - **calendar (jarvis)** — upper middle-right.
 - **todo list (jarvis)** — upper-right corner.
 - **music player / spotify** — bottom-right, the largest panel: current song,
@@ -74,10 +74,10 @@ Reading it, clockwise:
 window rules that float/size/position them on ws 10, one spawn script, and one
 autostart line. Nothing real runs inside the panels yet.
 
-**Every widget in Phase 6 is a PLACEHOLDER** — a `foot` window with a unique
+**Every widget in Phase 6 is a PLACEHOLDER** — a terminal window with a unique
 app-id that just prints a label and stays open. This works because a window
-rule matches on **app-id**, and `foot --app-id=X` sets that app-id to whatever
-we pass (verified in phase 4). So the frame is fully testable with zero installs.
+rule matches on **app-id**, and the terminal can set that app-id to whatever we
+pass (verified in phase 4). So the frame is fully testable with zero installs.
 
 **Phase 8 fills the panels.** Each deferred item swaps the placeholder's *launch
 command* for the real widget while **keeping the same `cc-*` app-id**, so the
@@ -90,6 +90,13 @@ Phase-6 rule keeps matching without edits:
 | todo list | `foot --app-id=cc-todo` (label) | jarvis-linked todo app (FastAPI) | step 8 / Jarvis integration |
 | music | `foot --app-id=cc-music` (label) | Spotify now-playing widget | step 8 "Spotify now-playing widget" |
 | jarvis TBD | *(none — empty)* | *(undesigned)* | Jarvis integration (last) |
+
+> **Terminal changed since this was written (2026-07-20):** the placeholder
+> terminal is now **kitty**, not foot — the VM substitution was reversed on real
+> hardware (see `vm-substitutions.md`). kitty spells the app-id **`--class=`**
+> where foot spelled it `--app-id=`, so read every `foot --app-id=cc-X` above as
+> `kitty --class=cc-X`. The app-id *strings* are unchanged, which is the whole
+> point: **not one window rule needed editing.** The design below stands as-is.
 
 > **Why calendar/todo are placeholders, not apps, now (decision 3):** their data
 > lives in a live DB behind the browser and is part of the Jarvis build — a full

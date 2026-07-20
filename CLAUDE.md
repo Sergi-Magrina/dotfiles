@@ -19,12 +19,13 @@ file either.
 - **One logical change per commit.** Small, reviewable diffs. Don't
   restructure multiple sections of a file in a single commit.
 - **Don't commit wallpaper/background changes.** As of the Gargantua
-  wallpaper (the last one committed), background swaps are local-only:
-  change the live wallpaper and the `swaybg` path in `hyprland.lua` as
-  needed, but don't create commits for them. The committed wallpaper line
-  and `hypr/wallpapers/` reflect the last agreed background — leave them as
-  they are. If you edit `hyprland.lua` for another reason, don't sweep an
-  uncommitted wallpaper-line change into that commit.
+  wallpaper (the last one committed), background swaps are local-only: change
+  the live wallpaper with `theme/set-wallpaper.sh <image>`, which writes only
+  gitignored state (`theme/state/active-wallpaper`). Don't create commits for
+  them. The committed `path =` in `hypr/hyprpaper.conf` (the *login*
+  wallpaper) and `hypr/wallpapers/` reflect the last agreed background —
+  leave them as they are. If you edit `hyprpaper.conf` for another reason,
+  don't sweep an uncommitted wallpaper-path change into that commit.
 - **Never assume aesthetic decisions.** Colors, layout specifics, sizing —
   ask before choosing, unless this file already states a decision.
 - **Symlink discipline:** all live config is symlinked from `~/dotfiles/*`
@@ -39,8 +40,12 @@ file either.
   `killall waybar && waybar &` (or trigger via Hyprland's autostart on a
   full restart) to see changes.
 - **VM constraints — don't relitigate these:**
-  - `kitty` crashes in this VM (software-rendered GPU can't serve it). The
-    terminal is `foot`. Never suggest or install kitty here.
+  - **Reversed on hardware (2026-07-20):** the terminal is now `kitty` (not
+    `foot`) and the wallpaper daemon is `hyprpaper` (not `swaybg`). Both
+    crashed or drew nothing in the VM — software-rendered GPU, no real
+    GL/EGL — and both work on the Pavilion. `foot` and `swaybg` stay
+    installed and palette-generated as fallbacks. Full write-up, including
+    the hyprpaper 0.8.x config/IPC gotchas, is in `vm-substitutions.md`.
   - VirtualBox's shared clipboard does not work under Hyprland (Wayland
     compositor, not X11/GNOME) — this is a known upstream limitation, not a
     bug to chase. SSH + VS Code Remote-SSH is the actual clipboard solution
@@ -48,14 +53,9 @@ file either.
   - When installing packages, check Wayland compatibility specifically —
     e.g. `rofi-wayland`, not plain `rofi` (X11-only, causes scaling issues
     under Hyprland).
-  - `hyprpaper` does not render in this VM — it needs a real GL/EGL context
-    the software-rendered GPU can't provide (same root cause as kitty). The
-    wallpaper daemon here is `swaybg` (static-image, works under software
-    rendering). See roadmap step 2 for the hardware-side reconsideration.
   - Visual polish (animations, gradients, general "does it look good") is
-    not meaningful to judge in this VM — software rendering. Judge
-    *structure and correctness* here; final aesthetic judgment happens on
-    real hardware later.
+    not meaningful to judge *in the VM* — software rendering. That caveat
+    lifts on the Pavilion: aesthetic judgment is now real there.
   - The running list of VM-vs-real-hardware program swaps, with versions
     (e.g. kitty→foot, hyprpaper→swaybg), lives in `vm-substitutions.md`. Add
     or reverse a swap there — don't duplicate the version table into this file.
@@ -79,15 +79,14 @@ until that phase lands, treat it as the single fixed theme.
 ## Roadmap
 
 1. **Red/black theme** — apply palette to Hyprland borders + waybar
-2. **Wallpaper** — wire up `swaybg` into autostart (see VM constraints for
-   why not `hyprpaper`). Interim solid dark wallpaper first; custom-generated
-   red/black wallpaper later.
-   - **Revisit on real hardware:** hyprpaper (Hyprland's native daemon) can
-     render there. But for a *single static* wallpaper it's functionally
-     equal to swaybg — it only wins if runtime wallpaper switching (its IPC),
-     preloading, or per-monitor wallpapers are wanted. Switch back only if
-     one of those becomes a real need; otherwise swaybg stays. Cost to
-     switch is ~one autostart line + a small `.conf`.
+2. **Wallpaper** — wallpaper daemon in autostart. Custom-generated red/black
+   wallpaper is still later work.
+   - **Settled on hardware (2026-07-20): `hyprpaper`**, reversing the VM's
+     `swaybg`. The "switch back only if you want its extras" condition was
+     met — phase 7b's `set-wallpaper.sh` drives hyprpaper's **IPC** to swap
+     the image inside the running daemon (no kill/respawn, no flicker), and
+     phase 9's settings app gets a clean surface. Login wallpaper lives in
+     `hypr/hyprpaper.conf`; runtime selection is gitignored local state.
 3. **Launcher swap** — install `rofi-wayland`, theme it to match the
    palette, rebind `Super+R` from `wofi` to `rofi`. Leave `wofi` installed
    but unused, no need to remove it.
@@ -99,10 +98,13 @@ until that phase lands, treat it as the single fixed theme.
    - **4** — general apps: Claude Desktop, VS Code, Spotify
    - **0** — Control Center (see below — special-cased, not a normal app
      workspace)
-5. **Terminal transparency** — a window rule scoped specifically to `foot`
-   (class match, not global `decoration.opacity`) so the terminal's black
-   background is semi-transparent and wallpaper shows through behind the
-   text. Other apps (browser, VS Code, etc.) stay fully opaque.
+5. **Terminal transparency** — scoped to the terminal alone, not global
+   `decoration.opacity`, so the terminal's black background is semi-
+   transparent and wallpaper shows through behind the text. Other apps
+   (browser, VS Code, etc.) stay fully opaque. Implemented as the terminal's
+   **own** setting — kitty's `background_opacity` (was foot's `[main] alpha`
+   in the VM), fed by the palette's `foot_alpha` key. That key name predates
+   kitty and is shared by both terminals on purpose — it isn't stale.
 6. **Control Center layout** (workspace 0) — structurally different from
    every other workspace: windows here are **floating with fixed
    size/position**, not tiled. Tiling auto-fills all available space, which
@@ -128,8 +130,8 @@ until that phase lands, treat it as the single fixed theme.
      forward as prep before the rest of the phase.
    - **Hot-swap mechanics:** regenerate waybar + rofi from the chosen
      palette, reload waybar (`killall waybar && waybar &` — it doesn't
-     hot-reload), swap the swaybg wallpaper, and let Hyprland hot-reload its
-     Lua. A palette-picker UI could later live in the Control Center
+     hot-reload), swap the wallpaper (now over hyprpaper's IPC), and let
+     Hyprland hot-reload its Lua. A palette-picker UI could later live in the Control Center
      (workspace 0), but the switch *mechanism* is independent of any UI and
      comes first.
    - Reframes the fixed-theme stance in the Color palette section above: the

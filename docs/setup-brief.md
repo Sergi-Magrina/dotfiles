@@ -25,11 +25,11 @@ project) plugs into the desktop.
 | Role | Program | Notes |
 |---|---|---|
 | Compositor | **Hyprland 0.55+** | Config in **Lua** (`hypr/hyprland.lua`), hot-reloads on save |
-| Terminal | **foot** | VM substitute — kitty crashes under software rendering; kitty is the real-hardware target |
+| Terminal | **kitty** | Real hardware since 2026-07-20 (was **foot** in the VM, which stays installed + generated as the fallback) |
 | Bar | **Waybar** | No hot-reload: `killall waybar && waybar &` after changes |
 | Launcher | **rofi-wayland** | Not plain rofi (X11-only); bound to `Super+R` |
 | Notifications | **mako** | |
-| Wallpaper | **swaybg** | VM substitute for hyprpaper (needs real GL/EGL); likely stays even on hardware — see `vm-substitutions.md` |
+| Wallpaper | **hyprpaper** | Real hardware since 2026-07-20 (was **swaybg** in the VM). Chosen for its IPC: `set-wallpaper.sh` swaps inside the running daemon — see `vm-substitutions.md` |
 | Visualizer | **cava** | Control Center bottom strip |
 | Spotify skin | **Spicetify** | Palette-generated `color.ini` |
 | Widgets | **Python + GTK** (PyGObject) | Proven in the VM; precedent: `hypr/scripts/cc-music.py` (MPRIS/playerctl now-playing panel) |
@@ -49,14 +49,14 @@ One palette definition drives every colored surface, and themes are
   **black/red** theme.
 - Two consumption styles, and only two:
   1. **Templated** — `theme/templates/*.in` rendered by `theme/gen.py` into
-     the seven hardcoded-format configs (waybar config + CSS, rofi rasi,
+     the hardcoded-format configs (waybar config + CSS, rofi rasi, kitty,
      foot, mako, cava, spicetify), since CSS/rasi/ini can't `require()` Lua.
   2. **Runtime-read** — programs/scripts source `theme/colors.env`
      (`KEY='#hex'`) at launch; Hyprland reads `hypr/colors.lua`.
 - **`theme/set-theme.sh`** does the switch: regenerate from templates,
   reload waybar/mako, let Hyprland hot-reload its Lua, and **kill + respawn
-  the Control Center widgets**. `theme/set-wallpaper.sh` swaps the swaybg
-  wallpaper — wallpaper is an **independent axis**, not a per-theme field,
+  the Control Center widgets**. `theme/set-wallpaper.sh` swaps the wallpaper
+  over hyprpaper's IPC — wallpaper is an **independent axis**, not a per-theme field,
   and live wallpaper choices are never committed.
 - Current picker is a rofi menu (`theme/pick.sh`); a proper settings GUI is
   a later phase built *on top of* these CLIs.
@@ -73,10 +73,10 @@ One palette definition drives every colored surface, and themes are
   app-id**, so the rules never change. Live today: cava and the GTK music
   widget (each with graceful fallbacks if not installed). Still
   placeholders: `cc-calendar` and `cc-todo` — reserved for Jarvis.
-- **VM constraints** (don't fight these in the workshop): software-rendered
-  GPU — no kitty, no hyprpaper, no Electron/WebGL; GTK-in-Python, TUIs in
-  foot, and Firefox are proven. Aesthetics are judged on real hardware,
-  structure/correctness in the VM. Claude sessions can't `sudo`/`pacman` —
+- **VM constraints** (only if you boot the workshop again — the rice now
+  runs on real hardware): software-rendered GPU — no kitty, no hyprpaper, no
+  Electron/WebGL; GTK-in-Python, TUIs in foot, and Firefox are proven.
+  Aesthetics are judged on real hardware, structure/correctness in the VM. Claude sessions can't `sudo`/`pacman` —
   installs are Sergi's.
 
 ## 5. Jarvis integration — status and expectations
