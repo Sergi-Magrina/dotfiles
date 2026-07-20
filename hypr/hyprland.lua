@@ -35,10 +35,15 @@ local colors = require("colors")
 ---------------------
 
 -- Set programs that you use
-local terminal    = "foot"
--- yazi is a TUI file manager: it inherits foot's window class, so give it a
--- dedicated app-id ("yazi") — that's the class the ws-2 routing rule matches.
-local fileManager = "foot --app-id=yazi yazi"
+-- kitty on real hardware: it needs the GPU acceleration the VM couldn't serve,
+-- which is why the workshop ran foot (see vm-substitutions.md). foot is still
+-- installed and palette-generated as a fallback.
+local terminal    = "kitty"
+-- yazi is a TUI file manager: it inherits kitty's window class, so give it a
+-- dedicated one ("yazi") — that's the class the ws-2 routing rule matches.
+-- kitty spells this `--class` (foot spelled it `--app-id`); on Wayland kitty
+-- maps --class onto the app_id, so the rule matches the same string as before.
+local fileManager = "kitty --class=yazi yazi"
 local menu = "rofi -show drun"
 
 
@@ -411,7 +416,7 @@ hl.window_rule({
 
 hl.window_rule({
     name  = "ws-files",
-    match = { class = "^yazi$" },       -- we set this via `foot --app-id=yazi`
+    match = { class = "^yazi$" },       -- we set this via `kitty --class=yazi`
     workspace = "2",
 })
 
@@ -443,7 +448,7 @@ hl.window_rule({
 -- Workspace 0 (internal 10; waybar relabels it "0") is a FLOATING dashboard —
 -- the deliberate opposite of the dwindle tiling every other workspace uses.
 -- Each widget is its own window with a unique `cc-*` app-id (set via
--- `foot --app-id=`); the rule floats it at a fixed fractional size/position (see
+-- `kitty --class=`); the rule floats it at a fixed fractional size/position (see
 -- POSITIONING below) and drops it on ws 10 *silently* — so the login view stays
 -- on ws 1, not ws 0.
 --
@@ -451,7 +456,7 @@ hl.window_rule({
 -- (red border, rounding 10), matching the "borders first" decision. To make a
 -- panel borderless later, add `no_border = true` (and `rounding = 0`) to it.
 --
--- PHASE-6 = frame only: every window here is a PLACEHOLDER foot terminal (see
+-- PHASE-6 = frame only: every window here is a PLACEHOLDER kitty terminal (see
 -- scripts/control-center.sh). PHASE-8 swaps each launch command for the real
 -- widget (cava; calendar/todo apps; Spotify now-playing) but keeps the same
 -- `cc-*` app-id so these rules keep matching. The "other jarvis (TBD)" zone is

@@ -4,8 +4,9 @@
 #
 #   writes theme/state/active-palette  ->  regenerates every colour consumer
 #   restarts waybar (it doesn't hot-reload); Hyprland hot-reloads colors.lua
-#   itself; rofi/foot re-read on next launch / new window (already-open foot
-#   terminals keep the old colours until reopened).
+#   itself; rofi/kitty re-read on next launch / new window (already-open
+#   terminals keep the old colours until reopened — kitty can be told to
+#   re-read in place with ctrl+shift+F5).
 set -euo pipefail
 
 THEME="$(dirname "$(realpath "$0")")"
@@ -60,13 +61,15 @@ command -v makoctl >/dev/null && makoctl reload 2>/dev/null || true
 
 # The ws-0 Control Center panels (phase 8) re-read their colours only on
 # launch — cava's generated config, the GTK music widget, and the placeholder
-# foots alike — so respawn them: the same "doesn't hot-reload, restart it"
+# terminals alike — so respawn them: the same "doesn't hot-reload, restart it"
 # pattern as waybar. Kill by window CLASS (exactly what the cc-* rules match):
-# that covers foot panels and the GTK widget alike, and unlike a pkill -f on
-# script paths it can't graze an unrelated process (e.g. an editor) whose
-# command line merely mentions a cc-* file. If hyprctl is unreachable, fall
-# back to pkill'ing the foot panels. --keep-focus skips control-center.sh's
-# login-time snap to ws 1, so a live theme switch doesn't move the view.
+# that covers the terminal panels and the GTK widget alike, and unlike a pkill
+# -f on script paths it can't graze an unrelated process (e.g. an editor) whose
+# command line merely mentions a cc-* file. If hyprctl is unreachable, fall back
+# to pkill'ing the terminal panels — matching `--class=cc-`, which is how
+# control-center.sh spawns them under kitty (it was `--app-id=cc-` under foot in
+# the VM). --keep-focus skips control-center.sh's login-time snap to ws 1, so a
+# live theme switch doesn't move the view.
 hyprctl clients -j 2>/dev/null | python3 -c '
 import json, os, signal, sys
 for c in json.load(sys.stdin):
@@ -75,7 +78,7 @@ for c in json.load(sys.stdin):
             os.kill(c["pid"], signal.SIGTERM)
         except (ProcessLookupError, PermissionError):
             pass
-' 2>/dev/null || pkill -f -- '--app-id=cc-' 2>/dev/null || true
+' 2>/dev/null || pkill -f -- '--class=cc-' 2>/dev/null || true
 setsid "$THEME/../hypr/scripts/control-center.sh" --keep-focus >/dev/null 2>&1 &
 
 # Spicetify (phase 8c — Sergi's call: the Spotify client IS part of the live

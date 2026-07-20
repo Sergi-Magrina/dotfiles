@@ -14,10 +14,12 @@
 keep_focus=0
 [ "${1:-}" = "--keep-focus" ] && keep_focus=1
 
-# place <app-id> <label>: a foot window whose class is <app-id>, showing <label>,
-# held open by `cat` (blocks on the pty until the window is closed).
+# place <app-id> <label>: a kitty window whose class is <app-id>, showing
+# <label>, held open by `cat` (blocks on the pty until the window is closed).
+# kitty spells the app-id `--class` where foot spelled it `--app-id`; on Wayland
+# kitty maps --class onto the app_id, so the cc-* window rules still match.
 place() {
-    foot --app-id="$1" -e sh -c \
+    kitty --class="$1" sh -c \
         "clear; printf '  %s\n\n  (phase-6 placeholder)\n' \"$2\"; exec cat" &
 }
 
@@ -27,7 +29,7 @@ place() {
 # pacman action) fall back to a labelled placeholder, so the panel — and the
 # 4-window focus wait below — keep working either way.
 if command -v cava >/dev/null; then
-    foot --app-id=cc-cava cava &
+    kitty --class=cc-cava cava &
 else
     # keep the label to one line — the cava panel is only a few rows tall,
     # and a wrapped label scrolls its first line out of view

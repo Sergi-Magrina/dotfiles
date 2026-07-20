@@ -32,6 +32,9 @@ TEMPLATES = {
     "config.jsonc.in":  REPO / "waybar" / "config.jsonc",
     "config.rasi.in":   REPO / "rofi" / "config.rasi",
     "foot.ini.in":      REPO / "foot" / "foot.ini",
+    # kitty is the real-hardware terminal; foot stays generated as the fallback
+    # it was in the VM (see vm-substitutions.md), so both follow the palette.
+    "kitty.conf.in":    REPO / "kitty" / "kitty.conf",
     "cava.config.in":   REPO / "cava" / "config",
     "mako.config.in":   REPO / "mako" / "config",
     # Spotify client re-skin (phase 8c) — rendered here, but only *applied*
